@@ -1,12 +1,10 @@
 import numpy
-from PIL import Image
+import cv2
 import numpy as np
+from math import sqrt
 
-
-# This is a terrible implementation
-# Probably we can do something better using recursion, but i'm too tired for that
-def neighborhood(neighborhood_type=4):
-    grid = [
+# Making this global because it can be used in some recursive implementations
+grid = [
         [0, 1, 0, 0, 0, 1, 0, 0, 0, 0],
         [1, 0, 0, 1, 0, 0, 0, 0, 1, 0],
         [1, 0, 1, 1, 0, 1, 1, 1, 0, 1],
@@ -14,15 +12,63 @@ def neighborhood(neighborhood_type=4):
         [0, 0, 0, 1, 0, 0, 1, 0, 0, 0]
     ]
 
-    s1_boundaries = ((0, 5), (0, 4))
-    s2_boundaries = ((6, 9), (0, 4))
+s1_boundaries = ((0, 5), (0, 4))
+s2_boundaries = ((6, 9), (0, 4))
 
-    # Searching neighborhood from s1
+
+def calcdistance(type='de'):
+
+    stops1 = False
+    stops2 = False
+
+    x1 = 0
+    x2 = 0
+    y1 = 0
+    y2 = 0
+    r = 0
+
+    while not stops1:
+        x1 = int(input('Digite a coordenada X do ponto 1 (partindo de 0): '))
+        y1 = int(input('Digite a coordenada y do ponto 1 (partindo de 0): '))
+
+        if x1 > s1_boundaries[0][1] or y1 > s1_boundaries[1][1]:
+            print('O ponto indicado não pertence a S1')
+
+        else:
+            stops1 = True
+
+    while not stops2:
+        x2 = int(input('Digite a coordenada X do ponto 2 (partindo de 0): '))
+        y2 = int(input('Digite a coordenada y do ponto 2 (partindo de 0): '))
+
+        if x2 > s2_boundaries[0][1] or y2 > s2_boundaries[1][1]:
+            print('O ponto indicado não pertence a S2')
+
+        else:
+            stops2 = True
+
+    if type == 'de':
+        r = sqrt(pow((x1 - x2), 2) + pow((y1 - y2), 2))
+
+    elif type == 'd4':
+        r = abs(x1 - x2) + abs(y1 - y2)
+
+    elif type == 'd8':
+        r = max(abs(x1 - x2), abs(y1 - y2))
+
+    print(f'\n Resultado: {type} = {r}')
+
+
+# Isso ficou terrível....
+# Podemos procurar uma forma de implementar isso usando recursão provavelmente
+def neighborhood(neighborhood_type=4):
+
+    # procurando vizinhança partindo de s1
     for i in range(s1_boundaries[1][1]):
         for j in range(s1_boundaries[0][0], s1_boundaries[0][1] + 1):
             if grid[i][j] == 1:
                 if j - 1 >= 0 and i - 1 >= 0:
-                    
+
                     if neighborhood_type == 8:
                         if grid[i - 1][j - 1] == 1 and s2_boundaries[0][0] <= j - 1 <= s2_boundaries[0][1]:
                             print(f"8(1) i{i} j{j}")
@@ -70,12 +116,12 @@ def createimage(size, squares_per_row, square_start_color, color_increment):
 
         aux_color = square_start_color
 
-        # Creating the color gradient
+        # Criando o gradiente de cores
         for a in range(total_squares):
             aux_color = aux_color + color_increment
             gradient.append(aux_color)
 
-        # Creating the image on the array
+        # Criando a imagem partindo do vetor
         for s in range(squares_per_row):
             for y in range(square_size):
                 for y_row in range(squares_per_row):
@@ -91,9 +137,7 @@ def createimage(size, squares_per_row, square_start_color, color_increment):
                 i = np.append(i, square_start_color)
 
     i = np.reshape(i, (size, size))
-    pil_image = Image.fromarray(i)
-    pil_image = pil_image.convert('L')
-    pil_image.save(f'{squares_per_row}.bmp', 'bmp')
+    cv2.imwrite(f'{squares_per_row}.bmp', i)
 
     print(f"Profundidade: L = 2^{total_squares} = {pow(2, total_squares)}")
     print(
@@ -103,6 +147,6 @@ def createimage(size, squares_per_row, square_start_color, color_increment):
 
 
 if __name__ == '__main__':
-    #i = createimage(size=256, squares_per_row=4, square_start_color=50, color_increment=10)
-
-    print(neighborhood(8))
+    i = createimage(size=256, squares_per_row=8, square_start_color=0, color_increment=5)
+    #print(neighborhood(8))
+    #calcdistance('d8')
