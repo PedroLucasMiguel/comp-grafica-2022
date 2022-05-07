@@ -1,4 +1,3 @@
-import numpy
 import cv2
 import numpy as np
 from math import sqrt
