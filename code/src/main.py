@@ -1,4 +1,5 @@
 from ex5_s1.ex5_s1 import createimage
+from ex6_s1.ex6_s1 import check_connectivity_4
 from ex7_s1.ex7_s1 import count_connected_4, count_connected_8
 from ex8_s1.ex8_s1 import calcdistance
 from ex3_s2.ex3_s2 import apply_noises, calcerrors
@@ -55,7 +56,5 @@ if __name__ == '__main__':
 
     # apply_noises()
     # calcerrors()
-
-    print(count_connected_8(s1, s2))
 
     pass
