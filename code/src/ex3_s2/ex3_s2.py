@@ -70,8 +70,8 @@ def gausian_noise(o_img):
     for i in range(row):
         for j in range(col):
             for c in range(len(colors)):
-                if np.random.normal() <= 0.01:
-                    o_img[i][j] = colors[c]
+                if np.random.normal() <= 0.0001:
+                    o_img[i][j] = o_img[i][j] + colors[c]
                     break
     
     return o_img
@@ -178,25 +178,24 @@ def jaccard(i1, i2):
 
 
 def apply_noises():
-    img_a = cv2.imread(path.join('code/src/images', 'a.jpg'), cv2.IMREAD_GRAYSCALE)
-    img_b = cv2.imread(path.join('code/src/images', 'b.jpg'), cv2.IMREAD_GRAYSCALE)
-    img_c = cv2.imread(path.join('code/src/images', 'c.jpg'), cv2.IMREAD_GRAYSCALE)
+    img_a = cv2.imread(path.join('../code/src/images', 'a.jpg'), cv2.IMREAD_GRAYSCALE)
+    img_b = cv2.imread(path.join('../code/src/images', 'b.jpg'), cv2.IMREAD_GRAYSCALE)
+    img_c = cv2.imread(path.join('../code/src/images', 'c.jpg'), cv2.IMREAD_GRAYSCALE)
 
     # Salt and peper
-    cv2.imwrite(path.join('code/src/output', 'a_sp.jpg'), salt_and_peper_noise(img_a))
-    cv2.imwrite(path.join('code/src/output', 'b_sp.jpg'), salt_and_peper_noise(img_b))
-    cv2.imwrite(path.join('code/src/output', 'c_sp.jpg'), salt_and_peper_noise(img_c))
+    cv2.imwrite(path.join('../code/src/output', 'a_sp.jpg'), salt_and_peper_noise(img_a))
+    cv2.imwrite(path.join('../code/src/output', 'b_sp.jpg'), salt_and_peper_noise(img_b))
+    cv2.imwrite(path.join('../code/src/output', 'c_sp.jpg'), salt_and_peper_noise(img_c))
 
     # Uniform
-    cv2.imwrite(path.join('code/src/output', 'a_u.jpg'), uniform_noise(img_a))
-    cv2.imwrite(path.join('code/src/output', 'b_u.jpg'), uniform_noise(img_b))
-    cv2.imwrite(path.join('code/src/output', 'c_u.jpg'), uniform_noise(img_c))
+    cv2.imwrite(path.join('../code/src/output', 'a_u.jpg'), uniform_noise(img_a))
+    cv2.imwrite(path.join('../code/src/output', 'b_u.jpg'), uniform_noise(img_b))
+    cv2.imwrite(path.join('../code/src/output', 'c_u.jpg'), uniform_noise(img_c))
 
     # Gaussian
-    cv2.imwrite(path.join('code/src/output', 'a_g.jpg'), gausian_noise(img_a))
-    cv2.imwrite(path.join('code/src/output', 'b_g.jpg'), gausian_noise(img_b))
-    cv2.imwrite(path.join('code/src/output', 'c_g.jpg'), gausian_noise(img_c))
-
+    cv2.imwrite(path.join('../code/src/output', 'a_g.jpg'), gausian_noise(img_a))
+    cv2.imwrite(path.join('../code/src/output', 'b_g.jpg'), gausian_noise(img_b))
+    cv2.imwrite(path.join('../code/src/output', 'c_g.jpg'), gausian_noise(img_c))
 
 def calcerrors():
     img_a = cv2.imread(path.join('code/src/images', 'a.jpg'), cv2.IMREAD_GRAYSCALE)
@@ -221,3 +220,6 @@ def calcerrors():
     img_teste_g = cv2.imread(path.join('code/src/output', 'teste_g.jpg'), cv2.IMREAD_GRAYSCALE)
 
     print(jaccard(img_teste, img_teste_g))
+
+if __name__ == '__main__':
+    apply_noises()

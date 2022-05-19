@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from os import path
+from math import log2, floor
 
 def createimage(size, squares_per_row, square_start_color, color_increment):
     i = np.array([])
@@ -35,10 +36,27 @@ def createimage(size, squares_per_row, square_start_color, color_increment):
                 i = np.append(i, square_start_color)
 
     i = np.reshape(i, (size, size))
-    cv2.imwrite(path.join('code/src/output', f'{squares_per_row}.bmp'), i)
+    cv2.imwrite(path.join('../code/src/output', f'{squares_per_row}.bmp'), i)
 
-    print(f"Profundidade: L = 2^{total_squares} = {pow(2, total_squares)}")
-    print(
-        f"Taxa de amostragem: {size}")  # https://www.sorocaba.unesp.br/Home/Graduacao/EngenhariaAmbiental/antonio/imagens.pdf
+    return f'{squares_per_row}.bmp'
 
-    return i
+def parttwo(imgName):
+    
+    # Lendro imagem
+    img  = cv2.imread(path.join('../code/src/output', imgName), cv2.IMREAD_GRAYSCALE)
+
+    higher_pixel_value = 0
+
+    # Encontrando o pixel de maior valor
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            if (img[i][j] > higher_pixel_value):
+                higher_pixel_value = img[i][j]
+
+    depth = floor(log2(higher_pixel_value)) + 1 # Calculando a profundidade
+
+    print(f'Pixel de maior valor: {higher_pixel_value}\nProfundidade: {depth}\n')
+    print(f"Taxa de amostragem:\nTotal de pixels: {img.shape[0] * img.shape[1]}\nOrganizados em uma matriz: {img.shape}")
+
+if __name__ == '__main__':
+    parttwo(createimage(256, 1, 100, -10))
