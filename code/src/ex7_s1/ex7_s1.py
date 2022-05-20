@@ -83,3 +83,35 @@ def count_connected_4(shape1, shape2):
 
 def count_connected_8(shape1, shape2):
     return __count_connected(shape1, shape2, __check_neighbourhood_8)
+
+if __name__ == '__main__':
+    s1 = {
+        "grid": [
+            [0, 1, 0, 0, 0, 1],
+            [1, 0, 0, 1, 0, 0],
+            [1, 0, 1, 1, 0, 1],
+            [1, 0, 1, 1, 1, 0],
+            [0, 0, 0, 1, 0, 0]
+        ],
+        "sizeX": 6,
+        "sizeY": 5,
+        "offsetX": 0,
+        "offsetY": 0
+    }
+
+    s2 = {
+        "grid": [
+            [0, 0, 0, 0],
+            [0, 0, 1, 0],
+            [1, 1, 0, 1],
+            [0, 0, 1, 0],
+            [1, 0, 0, 0]
+        ],
+        "sizeX": 4,
+        "sizeY": 5,
+        "offsetX": 6,
+        "offsetY": 0
+    }
+
+    print(count_connected_4(s1, s2))
+    print(count_connected_8(s1, s2))
