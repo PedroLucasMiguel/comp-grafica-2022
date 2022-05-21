@@ -165,7 +165,7 @@ def jaccard(i1, i2):
 
         for i in range(row):
             for j in range(col):
-                if int(i1[i][j]) - int(i2[i][j]) <= 25.5: # 25.5 valor de tolerância
+                if int(i1[i][j]) - int(i2[i][j]) <= 25.5: # 25.5 = valor de tolerância
                     v.append(1)
                 else:
                     v.append(0)
@@ -216,7 +216,7 @@ def calcerrors():
     img_b_g = cv2.imread(path.join('code/src/output', 'b_g.jpg'), cv2.IMREAD_GRAYSCALE)
     img_c_g = cv2.imread(path.join('code/src/output', 'c_g.jpg'), cv2.IMREAD_GRAYSCALE)
 
-
+    # Criando arquivo de sáida
     with open(path.join('code/src/output', 'results.txt'), 'w', newline='') as f:
 
         f.writelines(['Imagem | ', 'Erro máximo | ', 'Erro médio absoluto | ', 'Erro médio quadrático | ', 'Raiz do erro médio quadrático | ', 'Coeficiente de Jaccard | \n\n'])

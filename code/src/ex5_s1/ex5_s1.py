@@ -3,6 +3,7 @@ import numpy as np
 from os import path
 from math import log2, floor
 
+# Função que cria as imagens solicitadas
 def createimage(size, squares_per_row, square_start_color, color_increment):
     i = np.array([])
     total_squares = squares_per_row * squares_per_row
@@ -21,10 +22,10 @@ def createimage(size, squares_per_row, square_start_color, color_increment):
             gradient.append(aux_color)
 
         # Criando a imagem partindo do vetor
-        for s in range(squares_per_row): # Qtd linhas
-            for y in range(square_size): # 128
-                for y_row in range(squares_per_row): # 2
-                    for x in range(square_size): # 128
+        for s in range(squares_per_row): # Para cada linha de quadrados
+            for y in range(square_size): # De tamanho "square_size"
+                for y_row in range(squares_per_row): # Desenhe "square_per_row" quadrados
+                    for x in range(square_size): # De tamanho "square size"
                         i = np.append(i, gradient[gradient_index])
                     gradient_index = gradient_index + 1
                 gradient_index = gradient_offset  
@@ -40,6 +41,7 @@ def createimage(size, squares_per_row, square_start_color, color_increment):
 
     return f'{squares_per_row}.bmp'
 
+# Resolve a segunda parte do exercício
 def parttwo(imgName):
     
     # Lendo imagem

@@ -2,6 +2,7 @@ from math import sqrt
 
 from numpy import AxisError
 
+# Realiza o cálculo das distâncias
 def calcdistance(s1, s2, type='de'):
 
     stops1 = False
@@ -17,7 +18,7 @@ def calcdistance(s1, s2, type='de'):
         y1 = int(input('Digite a coordenada da linha do ponto 1 (partindo de '  + str(s1['offsetY']) + '): '))
         x1 = int(input('Digite a coordenada da coluna do ponto 1 (partindo de ' + str(s1['offsetX']) + '): '))
 
-        # Verifica se os valores inseridos estão dentro de S1
+        # Verifica se os valores inseridos estão dentro de S1 e se esse ponto é igual a 1
         if s1['offsetX'] <= x1 <= (s1['sizeX']-1 + s1['offsetX']) and s1['offsetY'] <= y1 <= (s1['sizeY']-1 + s1['offsetY']):
             if s1['grid'][y1 - s1['offsetX']][x1 - s1['offsetY']] == 1:
                 stops1 = True
@@ -30,7 +31,7 @@ def calcdistance(s1, s2, type='de'):
         y2 = int(input('Digite a coordenada da linha do ponto 2 (partindo de '  + str(s2['offsetY']) + '): '))
         x2 = int(input('Digite a coordenada da coluna do ponto 2 (partindo de ' + str(s2['offsetX']) + '): '))
         
-        # Verifica se os valores inseridos estão dentro de S2
+        # Verifica se os valores inseridos estão dentro de S2 e se esse ponto é igual a 1
         if  s2['offsetX'] <= x2 <= (s2['sizeX']-1 + s2['offsetX']) and s2['offsetY'] <= y2 <= (s2['sizeY']-1 + s2['offsetY']):
             if s2['grid'][y2 - s2['offsetY']][x2 - s2['offsetX']] == 1:
                 stops2 = True
@@ -39,7 +40,7 @@ def calcdistance(s1, s2, type='de'):
         else:
             print('O ponto indicado não pertence a S2')
 
-    # Realiza o cálculo da distância
+    # Realiza o cálculo da distância baseado em qual tipo foi escolhido
     if type == 'de':
         r = sqrt(pow((x1 - x2), 2) + pow((y1 - y2), 2))
 
