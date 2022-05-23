@@ -1,7 +1,21 @@
 import numpy as np
 
 
+'''
+    This module provides methods to count how many groups
+    of pixels exist in a combined space of two square shapes.
+    The shapes are assumed not to be overlapping.
+'''
+
+
 def __create_grid(shape1, shape2):
+    '''
+        Create a new grid or shape that is the union of the two privided shapes.
+        To do such, first a zero-ed grid is created with a size that encompasses
+        both shapes and then each pixel of each shape is checked and copied into this grid.
+        This strategy takes into consideration that both shapes can be anywhere in a 2D space,
+        not necessarily in contact, but can't be overlapping.
+    '''
     output = np.zeros((
         shape1["sizeY"]
         + shape2["sizeY"]
@@ -28,6 +42,12 @@ def __create_grid(shape1, shape2):
 
 
 def __check_neighbourhood_4(grid, i, j, value):
+    '''
+        Check all 4 neighbours of the current cell recursively.
+        If there is a neighbour with value 1, that means it haven't been checked yet.
+        As such it receives the current group ID value and the
+        recursion is called for each of it's neighbours.
+    '''
     if (grid[i][j] != 1):
         return False
 
@@ -44,6 +64,12 @@ def __check_neighbourhood_4(grid, i, j, value):
 
 
 def __check_neighbourhood_8(grid, i, j, value):
+    '''
+        Check all 8 neighbours of the current cell recursively.
+        If there is a neighbour with value 1, that means it haven't been checked yet.
+        As such it receives the current group ID value and the
+        recursion is called for each of it's neighbours.
+    '''
     if (grid[i][j] != 1):
         return False
 
@@ -64,22 +90,36 @@ def __check_neighbourhood_8(grid, i, j, value):
     return True
 
 
-def __count_connected(shape1, shape2, check_neighbourhood):
+def __count_connected(shape1, shape2, check_neighbourhood_fn):
+    '''
+        Create a combined grid of the two shapes and then call
+        the check_neighbourhood_fn for every pixel in the grid.
+        The groups are labelled given the value of n_groups and
+        the result is found by subtracting 1 from n_groups in the end.
+    '''
     n_groups = 1
 
     grid = __create_grid(shape1, shape2)
 
     for j in range(0, len(grid[0])):
         for i in range(0, len(grid)):
-            n_groups += 1 if check_neighbourhood(
+            n_groups += 1 if check_neighbourhood_fn(
                 grid, i, j, pow(2, n_groups)) else 0
 
     return n_groups - 1
 
 
 def count_connected_4(shape1, shape2):
+    '''
+        Count how many groups of pixel in the combined
+        space of the two shapes there are with 4-neighbourhood.
+    '''
     return __count_connected(shape1, shape2, __check_neighbourhood_4)
 
 
 def count_connected_8(shape1, shape2):
+    '''
+        Count how many groups of pixel in the combined
+        space of the two shapes there are with 8-neighbourhood.
+    '''
     return __count_connected(shape1, shape2, __check_neighbourhood_8)
