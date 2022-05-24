@@ -3,8 +3,9 @@ import numpy as np
 import cv2
 from math import sqrt
 from os import path
+import csv
 
-# Code from: https://www.geeksforgeeks.org/add-a-salt-and-pepper-noise-to-an-image-with-python/#:~:text=Salt%2Dand%2Dpepper%20noise%20is,%2C%20bit%20transmission%20error%2C%20etc.&text=Below%20is%20the%20implementation%3A,Python
+# Código retirado de: https://www.geeksforgeeks.org/add-a-salt-and-pepper-noise-to-an-image-with-python/#:~:text=Salt%2Dand%2Dpepper%20noise%20is,%2C%20bit%20transmission%20error%2C%20etc.&text=Below%20is%20the%20implementation%3A,Python
 def salt_and_peper_noise(img):
  
     # Getting the dimensions of the image
@@ -42,6 +43,7 @@ def salt_and_peper_noise(img):
          
     return img
 
+# Ruído uniforme
 def uniform_noise(o_img):
     row, col = o_img.shape
 
@@ -59,25 +61,27 @@ def uniform_noise(o_img):
     
     return o_img
 
+# Ruído gaussiano
 def gausian_noise(o_img):
     row, col = o_img.shape
 
     colors = []
 
-    for i in range(100, 201, 10):
+    for i in range(0, 101, 10):
         colors.append(i)
 
     for i in range(row):
         for j in range(col):
             for c in range(len(colors)):
-                if np.random.normal() <= 0.01:
-                    o_img[i][j] = colors[c]
+                if np.random.normal() <= 0.00000001:
+                    o_img[i][j] = o_img[i][j] + colors[c]
                     break
     
     return o_img
 
 # ------------------------------------------------------------------------------------------
 
+# Erro Máximo
 def max_error(i1, i2):
 
     if (i1.shape != i2.shape):
@@ -87,8 +91,6 @@ def max_error(i1, i2):
         v = []
         row, col = i1.shape
 
-        print(row, col)
-
         for i in range(row):
             for j in range(col):
                 v.append(abs(int(i1[i][j]) - int(i2[i][j])))
@@ -96,6 +98,7 @@ def max_error(i1, i2):
 
         return max(v)
 
+# Erro médio absoluto
 def mean_absolute_error(i1, i2):
 
     if (i1.shape != i2.shape):
@@ -105,8 +108,6 @@ def mean_absolute_error(i1, i2):
         v = []
         row, col = i1.shape
 
-        print(row, col)
-
         for i in range(row):
             for j in range(col):
                 v.append(abs(int(i1[i][j]) - int(i2[i][j])))
@@ -116,6 +117,7 @@ def mean_absolute_error(i1, i2):
         return v/(row * col)
 
 
+# Erro médio quadrático
 def mean_square_error(i1, i2):
 
     if (i1.shape != i2.shape):
@@ -125,8 +127,6 @@ def mean_square_error(i1, i2):
         v = []
         row, col = i1.shape
 
-        print(row, col)
-
         for i in range(row):
             for j in range(col):
                 v.append(pow(int(i1[i][j]) - int(i2[i][j]), 2))
@@ -135,6 +135,7 @@ def mean_square_error(i1, i2):
 
         return v/(row * col)
 
+# Raiz do erro médio quadrático
 def root_mean_square_error(i1, i2):
 
     if (i1.shape != i2.shape):
@@ -144,8 +145,6 @@ def root_mean_square_error(i1, i2):
         v = []
         row, col = i1.shape
 
-        print(row, col)
-
         for i in range(row):
             for j in range(col):
                 v.append(pow(int(i1[i][j]) - int(i2[i][j]), 2))
@@ -154,6 +153,7 @@ def root_mean_square_error(i1, i2):
 
         return sqrt(v/(row * col))
 
+# Coeficiente de jaccard
 def jaccard(i1, i2):
 
     if (i1.shape != i2.shape):
@@ -163,11 +163,9 @@ def jaccard(i1, i2):
         v = []
         row, col = i1.shape
 
-        print(row, col)
-
         for i in range(row):
             for j in range(col):
-                if int(i1[i][j]) - int(i2[i][j]) <= 25.5:
+                if int(i1[i][j]) - int(i2[i][j]) <= 25.5: # 25.5 = valor de tolerância
                     v.append(1)
                 else:
                     v.append(0)
@@ -177,47 +175,139 @@ def jaccard(i1, i2):
         return v/(row * col)
 
 
+# Aplicando os ruidos nas imagens
 def apply_noises():
     img_a = cv2.imread(path.join('code/src/images', 'a.jpg'), cv2.IMREAD_GRAYSCALE)
     img_b = cv2.imread(path.join('code/src/images', 'b.jpg'), cv2.IMREAD_GRAYSCALE)
     img_c = cv2.imread(path.join('code/src/images', 'c.jpg'), cv2.IMREAD_GRAYSCALE)
 
-    # Salt and peper
+    # Sal e pimenta
     cv2.imwrite(path.join('code/src/output', 'a_sp.jpg'), salt_and_peper_noise(img_a))
     cv2.imwrite(path.join('code/src/output', 'b_sp.jpg'), salt_and_peper_noise(img_b))
     cv2.imwrite(path.join('code/src/output', 'c_sp.jpg'), salt_and_peper_noise(img_c))
 
-    # Uniform
+    # Uniforme
     cv2.imwrite(path.join('code/src/output', 'a_u.jpg'), uniform_noise(img_a))
     cv2.imwrite(path.join('code/src/output', 'b_u.jpg'), uniform_noise(img_b))
     cv2.imwrite(path.join('code/src/output', 'c_u.jpg'), uniform_noise(img_c))
 
-    # Gaussian
+    # Gaussiando
     cv2.imwrite(path.join('code/src/output', 'a_g.jpg'), gausian_noise(img_a))
     cv2.imwrite(path.join('code/src/output', 'b_g.jpg'), gausian_noise(img_b))
     cv2.imwrite(path.join('code/src/output', 'c_g.jpg'), gausian_noise(img_c))
 
-
 def calcerrors():
     img_a = cv2.imread(path.join('code/src/images', 'a.jpg'), cv2.IMREAD_GRAYSCALE)
-    #img_b = cv2.imread(path.join('code/src/images', 'b.jpg'), cv2.IMREAD_GRAYSCALE)
-    #img_c = cv2.imread(path.join('code/src/images', 'c.jpg'), cv2.IMREAD_GRAYSCALE)
-    img_teste = cv2.imread(path.join('code/src/images', 'teste.jpg'), cv2.IMREAD_GRAYSCALE)
+    img_b = cv2.imread(path.join('code/src/images', 'b.jpg'), cv2.IMREAD_GRAYSCALE)
+    img_c = cv2.imread(path.join('code/src/images', 'c.jpg'), cv2.IMREAD_GRAYSCALE)
 
-    # Salte and peper
+    # Sal e pimenta
     img_a_sp = cv2.imread(path.join('code/src/output', 'a_sp.jpg'), cv2.IMREAD_GRAYSCALE)
-    #img_b_sp = cv2.imread(path.join('code/src/output', 'b_sp.jpg'), cv2.IMREAD_GRAYSCALE)
-    #img_c_sp = cv2.imread(path.join('code/src/output', 'c_sp.jpg'), cv2.IMREAD_GRAYSCALE)
-    img_teste_sp = cv2.imread(path.join('code/src/output', 'teste_sp.jpg'), cv2.IMREAD_GRAYSCALE)
+    img_b_sp = cv2.imread(path.join('code/src/output', 'b_sp.jpg'), cv2.IMREAD_GRAYSCALE)
+    img_c_sp = cv2.imread(path.join('code/src/output', 'c_sp.jpg'), cv2.IMREAD_GRAYSCALE)
 
-    # Uniform
+    # Uniforme
     img_a_u = cv2.imread(path.join('code/src/output', 'a_u.jpg'), cv2.IMREAD_GRAYSCALE)
-    #img_b_u = cv2.imread(path.join('code/src/output', 'b_u.jpg'), cv2.IMREAD_GRAYSCALE)
-    #img_c_u = cv2.imread(path.join('code/src/output', 'c_u.jpg'), cv2.IMREAD_GRAYSCALE)
+    img_b_u = cv2.imread(path.join('code/src/output', 'b_u.jpg'), cv2.IMREAD_GRAYSCALE)
+    img_c_u = cv2.imread(path.join('code/src/output', 'c_u.jpg'), cv2.IMREAD_GRAYSCALE)
 
+    # Gaussiano
     img_a_g = cv2.imread(path.join('code/src/output', 'a_g.jpg'), cv2.IMREAD_GRAYSCALE)
-    #img_b_g = cv2.imread(path.join('code/src/output', 'b_g.jpg'), cv2.IMREAD_GRAYSCALE)
-    #img_c_g = cv2.imread(path.join('code/src/output', 'c_g.jpg'), cv2.IMREAD_GRAYSCALE)
-    img_teste_g = cv2.imread(path.join('code/src/output', 'teste_g.jpg'), cv2.IMREAD_GRAYSCALE)
+    img_b_g = cv2.imread(path.join('code/src/output', 'b_g.jpg'), cv2.IMREAD_GRAYSCALE)
+    img_c_g = cv2.imread(path.join('code/src/output', 'c_g.jpg'), cv2.IMREAD_GRAYSCALE)
 
-    print(jaccard(img_teste, img_teste_g))
+    # Criando arquivo de sáida
+    with open(path.join('code/src/output', 'results.txt'), 'w', newline='') as f:
+
+        f.writelines(['Imagem | ', 'Erro máximo | ', 'Erro médio absoluto | ', 'Erro médio quadrático | ', 'Raiz do erro médio quadrático | ', 'Coeficiente de Jaccard | \n\n'])
+        
+        f.writelines([
+            'A (Sal e pimenta) ',
+            f'| {max_error(img_a, img_a_sp)} ',
+            f'| {mean_absolute_error(img_a, img_a_sp)} ',
+            f'| {mean_square_error(img_a, img_a_sp)} ',
+            f'| {root_mean_square_error(img_a, img_a_sp)} ',
+            f'| {jaccard(img_a, img_a_sp)} \n\n'
+        ])
+
+        f.writelines([
+            'A (Uniforme) ',
+            f'| {max_error(img_a, img_a_u)} ',
+            f'| {mean_absolute_error(img_a, img_a_u)} ',
+            f'| {mean_square_error(img_a, img_a_u)} ',
+            f'| {root_mean_square_error(img_a, img_a_u)} ',
+            f'| {jaccard(img_a, img_a_u)} \n\n'
+        ])
+
+        f.writelines([
+            'A (Gausiano) ',
+            f'| {max_error(img_a, img_a_g)} ',
+            f'| {mean_absolute_error(img_a, img_a_g)} ',
+            f'| {mean_square_error(img_a, img_a_g)} ',
+            f'| {root_mean_square_error(img_a, img_a_g)} ',
+            f'| {jaccard(img_a, img_a_g)} \n\n'
+        ])
+
+        f.write('-'*120 + '\n\n')
+
+        f.writelines([
+            'B (Sal e pimenta) ',
+            f'| {max_error(img_b, img_b_sp)} ',
+            f'| {mean_absolute_error(img_b, img_b_sp)} ',
+            f'| {mean_square_error(img_b, img_b_sp)} ',
+            f'| {root_mean_square_error(img_b, img_b_sp)} ',
+            f'| {jaccard(img_b, img_b_sp)} \n\n'
+        ])
+
+        f.writelines([
+            'B (Uniforme) ',
+            f'| {max_error(img_b, img_b_u)} ',
+            f'| {mean_absolute_error(img_b, img_b_u)} ',
+            f'| {mean_square_error(img_b, img_b_u)} ',
+            f'| {root_mean_square_error(img_b, img_b_u)} ',
+            f'| {jaccard(img_b, img_b_u)} \n\n'
+        ])
+
+        f.writelines([
+            'B (Gaussiano) ',
+            f'| {max_error(img_b, img_b_g)} ',
+            f'| {mean_absolute_error(img_b, img_b_g)} ',
+            f'| {mean_square_error(img_b, img_b_g)} ',
+            f'| {root_mean_square_error(img_b, img_b_g)} ',
+            f'| {jaccard(img_b, img_b_g)} \n\n'
+        ])
+
+        f.write('-'*120 + '\n\n')
+
+        f.writelines([
+            'C (Sal e pimenta) ',
+            f'| {max_error(img_c, img_c_sp)} ',
+            f'| {mean_absolute_error(img_c, img_c_sp)} ',
+            f'| {mean_square_error(img_c, img_c_sp)} ',
+            f'| {root_mean_square_error(img_c, img_c_sp)} ',
+            f'| {jaccard(img_c, img_c_sp)} \n\n'
+        ])
+
+        f.writelines([
+            'C (Uniforme) ',
+            f'| {max_error(img_c, img_c_u)} ',
+            f'| {mean_absolute_error(img_c, img_c_u)} ',
+            f'| {mean_square_error(img_c, img_c_u)} ',
+            f'| {root_mean_square_error(img_c, img_c_u)} ',
+            f'| {jaccard(img_c, img_c_u)} \n\n'
+        ])
+
+        f.writelines([
+            'C (Gaussiano) ',
+            f'| {max_error(img_c, img_c_g)} ',
+            f'| {mean_absolute_error(img_c, img_c_g)} ',
+            f'| {mean_square_error(img_c, img_c_g)} ',
+            f'| {root_mean_square_error(img_c, img_c_g)} ',
+            f'| {jaccard(img_c, img_c_g)} \n\n'
+        ])
+
+        print("Arquivo de saída com os resultados: " + path.join('code/src/output', 'results.txt'))
+
+if __name__ == '__main__':
+    apply_noises()
+    calcerrors()

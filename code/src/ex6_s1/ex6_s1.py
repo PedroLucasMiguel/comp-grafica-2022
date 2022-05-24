@@ -170,8 +170,8 @@ if __name__ == "__main__":
         "offsetY": 0
     })
     print(check_connectivity_4(s1, s2))  # expect True
-    print(check_connectivity_4(s1, s3))  # expect False
-    print(check_connectivity_4(s1, s4))  # expect False
+    #print(check_connectivity_4(s1, s3))  # expect False
+    #print(check_connectivity_4(s1, s4))  # expect False
     print(check_connectivity_8(s1, s2))  # expect True
-    print(check_connectivity_8(s1, s3))  # expect True
-    print(check_connectivity_8(s1, s4))  # expect False
+    #print(check_connectivity_8(s1, s3))  # expect True
+    #print(check_connectivity_8(s1, s4))  # expect False
