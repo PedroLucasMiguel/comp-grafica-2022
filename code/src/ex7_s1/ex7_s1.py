@@ -1,7 +1,22 @@
 import numpy as np
 
 
+'''
+    Este módulo fornece métodos para contar quantos grupos
+    de pixels existem em um espaço combinado de duas formas retangulares.
+    Assume-se que as formas não estão sobrepostas.
+'''
+
+
 def __create_grid(shape1, shape2):
+    '''
+        Cria uma nova grade ou forma que seja a união das duas formas fornecidas.
+        Para isso, primeiro é criada uma grade zerada com um tamanho que engloba
+        ambas as formas e, em seguida, cada pixel de cada forma é verificado e copiado para esta grade.
+        Essa estratégia leva em consideração que ambas as formas
+        podem estarem qualquer lugar em um espaço 2D,
+        não necessariamente em contato, mas não podem estar sobrepostos.
+    '''
     output = np.zeros((
         shape1["sizeY"]
         + shape2["sizeY"]
@@ -28,6 +43,12 @@ def __create_grid(shape1, shape2):
 
 
 def __check_neighbourhood_4(grid, i, j, value):
+    '''
+        Verifica todos os 4 vizinhos da célula atual recursivamente.
+        Se houver um vizinho com valor 1, significa que ainda não foi verificado.
+        Como tal, ele recebe o valor atual do ID do grupo e
+        a recursão é chamada para cada um de seus vizinhos.
+    '''
     if (grid[i][j] != 1):
         return False
 
@@ -44,6 +65,12 @@ def __check_neighbourhood_4(grid, i, j, value):
 
 
 def __check_neighbourhood_8(grid, i, j, value):
+    '''
+        Verifica todos os 8 vizinhos da célula atual recursivamente.
+        Se houver um vizinho com valor 1, significa que ainda não foi verificado.
+        Como tal, ele recebe o valor atual do ID do grupo e
+        a recursão é chamada para cada um de seus vizinhos.
+    '''
     if (grid[i][j] != 1):
         return False
 
@@ -64,24 +91,38 @@ def __check_neighbourhood_8(grid, i, j, value):
     return True
 
 
-def __count_connected(shape1, shape2, check_neighbourhood):
+def __count_connected(shape1, shape2, check_neighbourhood_fn):
+    '''
+        Crie uma grade combinada das duas formas e chame
+        o check_neighbourhood_fn para cada pixel na grade.
+        Os grupos são rotulados com o valor de n_groups e
+        o resultado é encontrado subtraindo 1 de n_groups no final.
+    '''
     n_groups = 1
 
     grid = __create_grid(shape1, shape2)
 
     for j in range(0, len(grid[0])):
         for i in range(0, len(grid)):
-            n_groups += 1 if check_neighbourhood(
+            n_groups += 1 if check_neighbourhood_fn(
                 grid, i, j, pow(2, n_groups)) else 0
 
     return n_groups - 1
 
 
 def count_connected_4(shape1, shape2):
+    '''
+        Conta quantos grupos de pixels na combinação do
+        espaço das duas formas existem com vizinhança-4.
+    '''
     return __count_connected(shape1, shape2, __check_neighbourhood_4)
 
 
 def count_connected_8(shape1, shape2):
+    '''
+        Conta quantos grupos de pixels na combinação do
+        espaço das duas formas existem com vizinhança-8.
+    '''
     return __count_connected(shape1, shape2, __check_neighbourhood_8)
 
 if __name__ == '__main__':
