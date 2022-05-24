@@ -2,19 +2,20 @@ import numpy as np
 
 
 '''
-    This module provides methods to count how many groups
-    of pixels exist in a combined space of two square shapes.
-    The shapes are assumed not to be overlapping.
+    Este módulo fornece métodos para contar quantos grupos
+    de pixels existem em um espaço combinado de duas formas retangulares.
+    Assume-se que as formas não estão sobrepostas.
 '''
 
 
 def __create_grid(shape1, shape2):
     '''
-        Create a new grid or shape that is the union of the two privided shapes.
-        To do such, first a zero-ed grid is created with a size that encompasses
-        both shapes and then each pixel of each shape is checked and copied into this grid.
-        This strategy takes into consideration that both shapes can be anywhere in a 2D space,
-        not necessarily in contact, but can't be overlapping.
+        Cria uma nova grade ou forma que seja a união das duas formas fornecidas.
+        Para isso, primeiro é criada uma grade zerada com um tamanho que engloba
+        ambas as formas e, em seguida, cada pixel de cada forma é verificado e copiado para esta grade.
+        Essa estratégia leva em consideração que ambas as formas
+        podem estarem qualquer lugar em um espaço 2D,
+        não necessariamente em contato, mas não podem estar sobrepostos.
     '''
     output = np.zeros((
         shape1["sizeY"]
@@ -43,10 +44,10 @@ def __create_grid(shape1, shape2):
 
 def __check_neighbourhood_4(grid, i, j, value):
     '''
-        Check all 4 neighbours of the current cell recursively.
-        If there is a neighbour with value 1, that means it haven't been checked yet.
-        As such it receives the current group ID value and the
-        recursion is called for each of it's neighbours.
+        Verifica todos os 4 vizinhos da célula atual recursivamente.
+        Se houver um vizinho com valor 1, significa que ainda não foi verificado.
+        Como tal, ele recebe o valor atual do ID do grupo e
+        a recursão é chamada para cada um de seus vizinhos.
     '''
     if (grid[i][j] != 1):
         return False
@@ -65,10 +66,10 @@ def __check_neighbourhood_4(grid, i, j, value):
 
 def __check_neighbourhood_8(grid, i, j, value):
     '''
-        Check all 8 neighbours of the current cell recursively.
-        If there is a neighbour with value 1, that means it haven't been checked yet.
-        As such it receives the current group ID value and the
-        recursion is called for each of it's neighbours.
+        Verifica todos os 8 vizinhos da célula atual recursivamente.
+        Se houver um vizinho com valor 1, significa que ainda não foi verificado.
+        Como tal, ele recebe o valor atual do ID do grupo e
+        a recursão é chamada para cada um de seus vizinhos.
     '''
     if (grid[i][j] != 1):
         return False
@@ -92,10 +93,10 @@ def __check_neighbourhood_8(grid, i, j, value):
 
 def __count_connected(shape1, shape2, check_neighbourhood_fn):
     '''
-        Create a combined grid of the two shapes and then call
-        the check_neighbourhood_fn for every pixel in the grid.
-        The groups are labelled given the value of n_groups and
-        the result is found by subtracting 1 from n_groups in the end.
+        Crie uma grade combinada das duas formas e chame
+        o check_neighbourhood_fn para cada pixel na grade.
+        Os grupos são rotulados com o valor de n_groups e
+        o resultado é encontrado subtraindo 1 de n_groups no final.
     '''
     n_groups = 1
 
@@ -111,15 +112,15 @@ def __count_connected(shape1, shape2, check_neighbourhood_fn):
 
 def count_connected_4(shape1, shape2):
     '''
-        Count how many groups of pixel in the combined
-        space of the two shapes there are with 4-neighbourhood.
+        Conta quantos grupos de pixels na combinação do
+        espaço das duas formas existem com vizinhança-4.
     '''
     return __count_connected(shape1, shape2, __check_neighbourhood_4)
 
 
 def count_connected_8(shape1, shape2):
     '''
-        Count how many groups of pixel in the combined
-        space of the two shapes there are with 8-neighbourhood.
+        Conta quantos grupos de pixels na combinação do
+        espaço das duas formas existem com vizinhança-8.
     '''
     return __count_connected(shape1, shape2, __check_neighbourhood_8)

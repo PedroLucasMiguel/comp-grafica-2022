@@ -1,21 +1,21 @@
 '''
-    This module provides methods to check if shape1 and shape2 have connecting groups of pixels.
-    It is assumed that both shapes are squares and they can be defined anywhere in a 2D space.
-    For optimization purposes, it is also assumed the shapes are not overlapping each other.
+    Este módulo fornece métodos para verificar se shape1 e shape2 possuem grupos de pixels conexos.
+    Assume-se que ambas as formas são retangulares e podem ser definidas em qualquer lugar em um espaço 2D.
+    Para fins de otimização, também assume-se que as formas não se sobrepõem.
 '''
 
 
 def __is_inside(point, corner):
     '''
-        Check if point is inside the given shape.
-        Since it was previously stablished that the shape is a square,
-        it is only needed to be checked if the point is between the
-        top-left and bottom-right corner in both the x and y axis.
+        Verifica se point está dentro da forma dada.
+        Como foi estabelecido anteriormente que a forma é um quadrado,
+        só é necessário verificar se o ponto está entre o
+        canto superior esquerdo e inferior direito nos eixos x e y.
     '''
     x, y = point
     '''
-        corner[0] => top-left
-        corner[1] => bottom-right
+        corner[0] => superior esquerdo
+        corner[1] => inferior direito
     '''
     py1, px1 = corner[0]
     py2, px2 = corner[1]
@@ -24,8 +24,8 @@ def __is_inside(point, corner):
 
 def __check_neighbours(points, shape):
     '''
-        Check for possible neighbours in the shape following a list of points.
-        At this points it is expeted that the points have been validated to be inside the shape.
+        Verifica possíveis vizinhos em shape seguindo uma lista de pontos.
+        Nestes pontos espera-se que os pontos tenham sido validados para estarem dentro da forma.
     '''
     for y, x in points:
         if shape["grid"][y - shape["offsetY"]][x - shape["offsetX"]]:
@@ -35,13 +35,13 @@ def __check_neighbours(points, shape):
 
 def __check_neighbours_4(point, shape, orientation):
     '''
-        Create list of possible neighbours to be checked.
-        Here it is applied an optmization strategy of only checking
-        for possible coordinates that can be outside the shape of reference.
-        In 4-neighbourhood there can only be 1 such possibility.
+        Cria uma lista de possíveis vizinhos a serem verificados.
+        Aqui é aplicada uma estratégia de otimização de apenas checar
+        para possíveis coordenadas que podem estar fora da forma de referência.
+        Em vizinhança-4 só pode haver 1 possibilidade.
 
-        Orientation isn't used in this case, but the parameter
-        is kept to keep symmetry between the two functions.
+        A orientação não é usada neste caso, mas o parâmetro
+        é mantido para manter a simetria entre as duas funções.
 
         TODO: move __is_inside in here to keep symetry.
     '''
@@ -50,10 +50,10 @@ def __check_neighbours_4(point, shape, orientation):
 
 def __check_neighbours_8(point, shape, orientation):
     '''
-        Create a list of possible neighbours to be checked.
-        Here it is applied an optimization strategy of only checking
-        for possible coordinates that can be outside the shape of reference.
-        In 8-neighbourhood there are 3 possibilities.
+        Cria uma lista de possíveis vizinhos a serem verificados.
+        Aqui é aplicada uma estratégia de otimização de apenas checar
+        para possíveis coordenadas que podem estar fora da forma de referência.
+        Em vizinhança-8 existem 3 possibilidades.
 
         TODO: move __is_inside in here to be called for every point created.
     '''
@@ -61,7 +61,7 @@ def __check_neighbours_8(point, shape, orientation):
     points = []
     for i in range(-1, 2):
         '''
-            Orientation 0 os horizontal and 1 is vertical.
+            orientation 0 é horizontal e 1 é vertical.
         '''
         if orientation:
             points.append((y, x + i))
@@ -72,13 +72,15 @@ def __check_neighbours_8(point, shape, orientation):
 
 def __check_connectivity(shape1, shape2, neighbourhood_fn):
     '''
-        Since the shapes are assumed to be squares, it is possible to check for
-        connectivity by only checking the borders of the shapes.
-        Additionally, since it is only checked for 4 and 8-neighbourhood,
-        then it is unnecessary to check the borders of both shapes.
-        As such, the shape1 is taken as the shape of reference.
-        To further optimize this check of connectivity, a strategy of return-fast is utilized.
-        Which means the code will stop as soon as the first confirmed neighbour is found.
+        Como se assume que as formas são retangulares, é possível verificar
+        conectividade verificando apenas as bordas das formas.
+        Além disso, como é verificado apenas para vizinhança-4 e 8,
+        então é desnecessário verificar as bordas de ambas as formas.
+        Como tal, shape1 é tomada como a forma de referência.
+        Para otimizar ainda mais essa verificação de conectividade,
+        é utilizada uma estratégia de retorno rápido.
+        O que significa que o código irá parar assim que o
+        primeiro vizinho confirmado for encontrado.
     '''
     s2_corners = [
         (shape2["offsetX"], shape2["offsetY"]),
@@ -102,20 +104,20 @@ def __check_connectivity(shape1, shape2, neighbourhood_fn):
 
 def check_connectivity_4(shape1, shape2):
     '''
-        Check connectivity with 4-neighbourhood
+        Checa conectividade com vizinhança-4
     '''
     return __check_connectivity(shape1, shape2, __check_neighbours_4)
 
 
 def check_connectivity_8(shape1, shape2):
     '''
-        Check connectivity with 8-neighbourhood
+        Checa conectividade com vizinhança-8
     '''
     return __check_connectivity(shape1, shape2, __check_neighbours_8)
 
 
 '''
-    Code used for testing during development
+    Código utilizado para testes durante o desenvolvimento
 '''
 if __name__ == "__main__":
     s1, s2, s3, s4 = ({
