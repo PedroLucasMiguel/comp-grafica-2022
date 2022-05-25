@@ -177,49 +177,49 @@ def jaccard(i1, i2):
 
 # Aplicando os ruidos nas imagens
 def apply_noises():
-    img_a = cv2.imread(path.join('code/src/images', 'a.jpg'), cv2.IMREAD_GRAYSCALE)
-    img_b = cv2.imread(path.join('code/src/images', 'b.jpg'), cv2.IMREAD_GRAYSCALE)
-    img_c = cv2.imread(path.join('code/src/images', 'c.jpg'), cv2.IMREAD_GRAYSCALE)
+    img_a = cv2.imread(path.join('src/images', 'a.jpg'), cv2.IMREAD_GRAYSCALE)
+    img_b = cv2.imread(path.join('src/images', 'b.jpg'), cv2.IMREAD_GRAYSCALE)
+    img_c = cv2.imread(path.join('src/images', 'c.jpg'), cv2.IMREAD_GRAYSCALE)
 
     # Sal e pimenta
-    cv2.imwrite(path.join('code/src/output', 'a_sp.jpg'), salt_and_peper_noise(img_a))
-    cv2.imwrite(path.join('code/src/output', 'b_sp.jpg'), salt_and_peper_noise(img_b))
-    cv2.imwrite(path.join('code/src/output', 'c_sp.jpg'), salt_and_peper_noise(img_c))
+    cv2.imwrite(path.join('src/output', 'a_sp.jpg'), salt_and_peper_noise(img_a))
+    cv2.imwrite(path.join('src/output', 'b_sp.jpg'), salt_and_peper_noise(img_b))
+    cv2.imwrite(path.join('src/output', 'c_sp.jpg'), salt_and_peper_noise(img_c))
 
     # Uniforme
-    cv2.imwrite(path.join('code/src/output', 'a_u.jpg'), uniform_noise(img_a))
-    cv2.imwrite(path.join('code/src/output', 'b_u.jpg'), uniform_noise(img_b))
-    cv2.imwrite(path.join('code/src/output', 'c_u.jpg'), uniform_noise(img_c))
+    cv2.imwrite(path.join('src/output', 'a_u.jpg'), uniform_noise(img_a))
+    cv2.imwrite(path.join('src/output', 'b_u.jpg'), uniform_noise(img_b))
+    cv2.imwrite(path.join('src/output', 'c_u.jpg'), uniform_noise(img_c))
 
     # Gaussiando
-    cv2.imwrite(path.join('code/src/output', 'a_g.jpg'), gausian_noise(img_a))
-    cv2.imwrite(path.join('code/src/output', 'b_g.jpg'), gausian_noise(img_b))
-    cv2.imwrite(path.join('code/src/output', 'c_g.jpg'), gausian_noise(img_c))
+    cv2.imwrite(path.join('src/output', 'a_g.jpg'), gausian_noise(img_a))
+    cv2.imwrite(path.join('src/output', 'b_g.jpg'), gausian_noise(img_b))
+    cv2.imwrite(path.join('src/output', 'c_g.jpg'), gausian_noise(img_c))
 
 def calcerrors():
-    img_a = cv2.imread(path.join('code/src/images', 'a.jpg'), cv2.IMREAD_GRAYSCALE)
-    img_b = cv2.imread(path.join('code/src/images', 'b.jpg'), cv2.IMREAD_GRAYSCALE)
-    img_c = cv2.imread(path.join('code/src/images', 'c.jpg'), cv2.IMREAD_GRAYSCALE)
+    img_a = cv2.imread(path.join('src/images', 'a.jpg'), cv2.IMREAD_GRAYSCALE)
+    img_b = cv2.imread(path.join('src/images', 'b.jpg'), cv2.IMREAD_GRAYSCALE)
+    img_c = cv2.imread(path.join('src/images', 'c.jpg'), cv2.IMREAD_GRAYSCALE)
 
     # Sal e pimenta
-    img_a_sp = cv2.imread(path.join('code/src/output', 'a_sp.jpg'), cv2.IMREAD_GRAYSCALE)
-    img_b_sp = cv2.imread(path.join('code/src/output', 'b_sp.jpg'), cv2.IMREAD_GRAYSCALE)
-    img_c_sp = cv2.imread(path.join('code/src/output', 'c_sp.jpg'), cv2.IMREAD_GRAYSCALE)
+    img_a_sp = cv2.imread(path.join('src/output', 'a_sp.jpg'), cv2.IMREAD_GRAYSCALE)
+    img_b_sp = cv2.imread(path.join('src/output', 'b_sp.jpg'), cv2.IMREAD_GRAYSCALE)
+    img_c_sp = cv2.imread(path.join('src/output', 'c_sp.jpg'), cv2.IMREAD_GRAYSCALE)
 
     # Uniforme
-    img_a_u = cv2.imread(path.join('code/src/output', 'a_u.jpg'), cv2.IMREAD_GRAYSCALE)
-    img_b_u = cv2.imread(path.join('code/src/output', 'b_u.jpg'), cv2.IMREAD_GRAYSCALE)
-    img_c_u = cv2.imread(path.join('code/src/output', 'c_u.jpg'), cv2.IMREAD_GRAYSCALE)
+    img_a_u = cv2.imread(path.join('src/output', 'a_u.jpg'), cv2.IMREAD_GRAYSCALE)
+    img_b_u = cv2.imread(path.join('src/output', 'b_u.jpg'), cv2.IMREAD_GRAYSCALE)
+    img_c_u = cv2.imread(path.join('src/output', 'c_u.jpg'), cv2.IMREAD_GRAYSCALE)
 
     # Gaussiano
-    img_a_g = cv2.imread(path.join('code/src/output', 'a_g.jpg'), cv2.IMREAD_GRAYSCALE)
-    img_b_g = cv2.imread(path.join('code/src/output', 'b_g.jpg'), cv2.IMREAD_GRAYSCALE)
-    img_c_g = cv2.imread(path.join('code/src/output', 'c_g.jpg'), cv2.IMREAD_GRAYSCALE)
+    img_a_g = cv2.imread(path.join('src/output', 'a_g.jpg'), cv2.IMREAD_GRAYSCALE)
+    img_b_g = cv2.imread(path.join('src/output', 'b_g.jpg'), cv2.IMREAD_GRAYSCALE)
+    img_c_g = cv2.imread(path.join('src/output', 'c_g.jpg'), cv2.IMREAD_GRAYSCALE)
 
     # Criando arquivo de sáida
-    with open(path.join('code/src/output', 'results.txt'), 'w', newline='') as f:
+    with open(path.join('src/output', 'results.txt'), 'w', newline='') as f:
 
-        f.writelines(['Imagem | ', 'Erro máximo | ', 'Erro médio absoluto | ', 'Erro médio quadrático | ', 'Raiz do erro médio quadrático | ', 'Coeficiente de Jaccard | \n\n'])
+        f.writelines(['Imagem | ', 'Erro maximo | ', 'Erro medio absoluto | ', 'Erro medio quadratico | ', 'Raiz do erro medio quadratico | ', 'Coeficiente de Jaccard | \n\n'])
         
         f.writelines([
             'A (Sal e pimenta) ',
@@ -306,8 +306,8 @@ def calcerrors():
             f'| {jaccard(img_c, img_c_g)} \n\n'
         ])
 
-        print("Arquivo de saída com os resultados: " + path.join('code/src/output', 'results.txt'))
+        print("Arquivo de saída com os resultados: " + path.join('src/output', 'results.txt'))
 
-if __name__ == '__main__':
+def run():
     apply_noises()
     calcerrors()

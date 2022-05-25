@@ -37,7 +37,7 @@ def createimage(size, squares_per_row, square_start_color, color_increment):
                 i = np.append(i, square_start_color)
 
     i = np.reshape(i, (size, size))
-    cv2.imwrite(path.join('code/src/output', f'{squares_per_row}.bmp'), i)
+    cv2.imwrite(path.join('src/output', f'{squares_per_row}.bmp'), i)
 
     return f'{squares_per_row}.bmp'
 
@@ -45,7 +45,7 @@ def createimage(size, squares_per_row, square_start_color, color_increment):
 def parttwo(imgName):
     
     # Lendo imagem
-    img  = cv2.imread(path.join('code/src/output', imgName), cv2.IMREAD_GRAYSCALE)
+    img  = cv2.imread(path.join('src/output', imgName), cv2.IMREAD_GRAYSCALE)
 
     higher_pixel_value = 0
 
@@ -57,10 +57,11 @@ def parttwo(imgName):
 
     depth = floor(log2(higher_pixel_value)) + 1 # Calculando a profundidade
 
+    print(f'Imagem {imgName}')
     print(f'Pixel de maior valor: {higher_pixel_value}\nProfundidade: {depth}\n')
     print(f"Taxa de amostragem:\nTotal de pixels: {img.shape[0] * img.shape[1]}\nOrganizados em uma matriz: {img.shape}\n\n")
 
-if __name__ == '__main__':
+def run():
     parttwo(createimage(256, 1, 200, -10))
     parttwo(createimage(256, 2, 60, 50))
     parttwo(createimage(256, 4, 60, 10))

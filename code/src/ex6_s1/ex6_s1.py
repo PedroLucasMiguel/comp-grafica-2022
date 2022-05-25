@@ -119,7 +119,8 @@ def check_connectivity_8(shape1, shape2):
 '''
     Código utilizado para testes durante o desenvolvimento
 '''
-if __name__ == "__main__":
+def run():
+    # s3 e s4 são outros tipos de grids para realizar os testes
     s1, s2, s3, s4 = ({
         "grid": [
             [0, 1, 0, 0, 0, 1],
@@ -169,9 +170,9 @@ if __name__ == "__main__":
         "offsetX": 7,
         "offsetY": 0
     })
-    print(check_connectivity_4(s1, s2))  # expect True
+    print(f'Vizinhança 4: {check_connectivity_4(s1, s2)}')  # expect True
     #print(check_connectivity_4(s1, s3))  # expect False
     #print(check_connectivity_4(s1, s4))  # expect False
-    print(check_connectivity_8(s1, s2))  # expect True
+    print(f'Vizinhança 8: {check_connectivity_8(s1, s2)}')  # expect True
     #print(check_connectivity_8(s1, s3))  # expect True
     #print(check_connectivity_8(s1, s4))  # expect False

@@ -52,7 +52,7 @@ def calcdistance(s1, s2, type='de'):
 
     print(f'\nResultado: {type} = {r}\n')
 
-if __name__ == '__main__':
+def run():
 
     s1 = {
         "grid": [

@@ -125,7 +125,7 @@ def count_connected_8(shape1, shape2):
     '''
     return __count_connected(shape1, shape2, __check_neighbourhood_8)
 
-if __name__ == '__main__':
+def run():
     s1 = {
         "grid": [
             [0, 1, 0, 0, 0, 1],
@@ -154,5 +154,5 @@ if __name__ == '__main__':
         "offsetY": 0
     }
 
-    print(count_connected_4(s1, s2))
-    print(count_connected_8(s1, s2))
+    print(f'Conectividade 4: {count_connected_4(s1, s2)}')
+    print(f'Conectividade 8: {count_connected_8(s1, s2)}')
