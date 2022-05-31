@@ -89,7 +89,7 @@ def jaccard(i1, i2):
 
         for i in range(row):
             for j in range(col):
-                if int(i1[i][j]) - int(i2[i][j]) <= 25.5: # 25.5 = valor de tolerância
+                if abs(int(i1[i][j]) - int(i2[i][j])) <= 25.5: # 25.5 = valor de tolerância
                     v.append(1)
                 else:
                     v.append(0)
