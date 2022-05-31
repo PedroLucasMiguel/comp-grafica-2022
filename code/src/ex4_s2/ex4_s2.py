@@ -110,8 +110,8 @@ def __do_gamma_correction(f, f_name):
 
     for y in range(s[0]):
         for x in range(s[1]):
-            i = np.append(i, f[y][x] + __calc_gamma_correction(f[x][y], 1, 0.4))
-            i2 = np.append(i2, f[y][x] + __calc_gamma_correction(f[x][y], 1, 0.04))
+            i = np.append(i, f[y][x] + __calc_gamma_correction(f[y][x], 1, 0.4))
+            i2 = np.append(i2, f[y][x] + __calc_gamma_correction(f[y][x], 1, 0.04))
     
     i = np.reshape(i, f.shape)
     i2 = np.reshape(i2, f.shape)
