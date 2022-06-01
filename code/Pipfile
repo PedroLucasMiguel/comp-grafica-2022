@@ -4,8 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-numpy = "==1.22.3"
-opencv-python = "==4.5.5.64"
+numpy = "*"
+opencv-python = "*"
+matplotlib = "*"
 
 [dev-packages]
 autopep8 = "*"

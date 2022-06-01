@@ -6,7 +6,8 @@ from matplotlib import pyplot as plt
 
 DEPTH = 8
 
-def createHistogram(img, img_name):
+
+def createHistogram(img, ax):
     '''
         Assumimos que todas as imagens a serem enviadas para esta função
         estão convertidas para grayscale com profundidade 8.
@@ -29,15 +30,9 @@ def createHistogram(img, img_name):
 
     scale_max = pow(2, DEPTH)
 
-    plt.hist(img.ravel(), scale_max, [0, scale_max])
-    plt.xlabel("Níveis de cinza")
-    plt.ylabel("Quantidade de Pixels")
-    
-    plt.savefig(path.join('src/output', f'{img_name}-h.png'))
-
-    plt.cla()
-
-    print('Histograma salvo em: ' + path.join('src/output', f'{img_name}-h.png'))
+    ax.hist(img.ravel(), scale_max, [0, scale_max])
+    ax.set_xlabel("Níveis de cinza")
+    ax.set_ylabel("Quantidade de Pixels")
 
     '''
     # TODO -  Para fazer isso funcionar corretamente, eu preciei criar um dicionario
@@ -65,11 +60,12 @@ def createHistogram(img, img_name):
     plt.show()
     '''
 
-def equalizeHistogram(img, img_name):
+
+def equalizeHistogram(img, ax_img, ax_hist):
 
     rows = pow(2, DEPTH)
     qtd_pixels = img.shape[0] * img.shape[1]
-    
+
     hist = []
 
     for i in range(rows):
@@ -99,24 +95,40 @@ def equalizeHistogram(img, img_name):
 
     img_np = np.array(img)
 
-    cv2.imwrite(path.join('src/output', f'{img_name}-eh.png'), img_np)
+    ax_img.imshow(img_np, cmap='gray')
 
-    createHistogram(img, img_name)
+    createHistogram(img, ax_hist)
 
 
 if __name__ == '__main__':
-    img1 = cv2.imread(path.join('src/images', 'frutas.bmp'), cv2.IMREAD_GRAYSCALE)
-    img2 = cv2.imread(path.join('src/images', 'mammogram.bmp'), cv2.IMREAD_GRAYSCALE)
-    img3 = cv2.imread(path.join('src/images', 'Moon.tif'), cv2.IMREAD_GRAYSCALE)
-    img4 = cv2.imread(path.join('src/images', 'polem.bmp'), cv2.IMREAD_GRAYSCALE)
-    createHistogram(img1, 'frutas-original')
-    equalizeHistogram(img1, 'frutas-equalizado')
+    img1 = cv2.imread(path.join('src', 'images', 'frutas.bmp'),
+                      cv2.IMREAD_GRAYSCALE)
+    img2 = cv2.imread(
+        path.join('src', 'images', 'mammogram.bmp'), cv2.IMREAD_GRAYSCALE)
+    img3 = cv2.imread(path.join('src', 'images', 'Moon.tif'),
+                      cv2.IMREAD_GRAYSCALE)
+    img4 = cv2.imread(path.join('src', 'images', 'polem.bmp'),
+                      cv2.IMREAD_GRAYSCALE)
 
-    createHistogram(img2, 'mammogram-original')
-    equalizeHistogram(img2, 'mammogram-equalizado')
+    fig, axs = plt.subplots(4, 4)
 
-    createHistogram(img3, 'Moon-original')
-    equalizeHistogram(img3, 'Moon-equalizado')
+    fig.set_size_inches(20, 15)
+    fig.set_dpi(300)
 
-    createHistogram(img4, 'polem-original')
-    equalizeHistogram(img4, 'polem-equalizado')
+    axs[0][0].imshow(img1, cmap='gray')
+    createHistogram(img1, axs[0][1])
+    equalizeHistogram(img1, axs[0][2], axs[0][3])
+
+    axs[1][0].imshow(img2, cmap='gray')
+    createHistogram(img2, axs[1][1])
+    equalizeHistogram(img2, axs[1][2], axs[1][3])
+
+    axs[2][0].imshow(img3, cmap='gray')
+    createHistogram(img3, axs[2][1])
+    equalizeHistogram(img3, axs[2][2], axs[2][3])
+
+    axs[3][0].imshow(img4, cmap='gray')
+    createHistogram(img4, axs[3][1])
+    equalizeHistogram(img4, axs[3][2], axs[3][3])
+
+    fig.savefig(path.join('src', 'images', 'ex4_s5.png'))
