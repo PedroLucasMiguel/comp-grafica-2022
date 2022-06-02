@@ -7,25 +7,6 @@ from matplotlib import pyplot as plt
 DEPTH = 8
 
 def createHistogram(img, img_name):
-    '''
-        Assumimos que todas as imagens a serem enviadas para esta função
-        estão convertidas para grayscale com profundidade 8.
-    '''
-
-    # Criando a tabela base do histograma
-    '''
-    rows = pow(2, DEPTH)
-    hist = []
-
-    for i in range(rows):
-        hist.insert(i, [i, 0])
-
-    for i in img:
-        for j in i:
-            hist[j][1] = hist[j][1] + 1
-
-    np_hist = np.array(hist)
-    '''
 
     scale_max = pow(2, DEPTH)
 
@@ -39,31 +20,6 @@ def createHistogram(img, img_name):
 
     print('Histograma salvo em: ' + path.join('src/output', f'{img_name}-h.png'))
 
-    '''
-    # TODO -  Para fazer isso funcionar corretamente, eu preciei criar um dicionario
-    # e convertar o mesmo para um array depois. Não entendi o porque isso aconteceu
-    # mas as somas do np sempre quebravam alguma coisa
-    hist = {}
-    rows = pow(2, DEPTH)
-    for i in range(rows):
-        hist[i] = 0
-
-    # Preenchendo a tabela com o histograma da imagem
-    for i in range(img.shape[0]):
-        for j in range(img.shape[1]):
-            hist[img[i][j]] = hist[img[i][j]] + 1
-
-    data = hist.items()
-    l = list(data)
-    hist = np.array(l)
-
-        #Formato final do histograma:
-            #nível de cinza | quantidade de pixels
-
-    plt.hist(hist, rows, [0, rows])
-    
-    plt.show()
-    '''
 
 def equalizeHistogram(img, img_name):
 
@@ -97,9 +53,7 @@ def equalizeHistogram(img, img_name):
         for j in range(img.shape[1]):
             img[i][j] = hist[img[i][j]][1]
 
-    img_np = np.array(img)
-
-    cv2.imwrite(path.join('src/output', f'{img_name}-eh.png'), img_np)
+    cv2.imwrite(path.join('src/output', f'{img_name}-eh.png'), img)
 
     createHistogram(img, img_name)
 
