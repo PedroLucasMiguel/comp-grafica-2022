@@ -100,9 +100,11 @@ def jaccard(i1, i2):
 
 # -----------------------------------------------------------------------------------------------
 
+# Calculo de correcao gamma
 def __calc_gamma_correction(f, c, y):
     return c*pow((f + 1), y)
 
+# Realiza o processo de correcao
 def __do_gamma_correction(f, f_name):
     s = f.shape
     i = np.array([])
@@ -115,17 +117,17 @@ def __do_gamma_correction(f, f_name):
     
     i = np.reshape(i, f.shape)
     i2 = np.reshape(i2, f.shape)
-    cv2.imwrite(path.join('src/output', f'{f_name}_gc4.jpg'), i)
-    cv2.imwrite(path.join('src/output', f'{f_name}_gc04.jpg'), i2)
+    cv2.imwrite(path.join('output', f'{f_name}_gc4.jpg'), i)
+    cv2.imwrite(path.join('output', f'{f_name}_gc04.jpg'), i2)
 
 def gamma_correction():
-    print('Aplicando correção gama...')
+    print('Aplicando correcao gama...')
     file_names = ['a', 'b', 'c']
     image_types = ['sp', 'u', 'g']
 
     for f_name in file_names:
         for types in image_types:
-            __do_gamma_correction(cv2.imread(path.join(f'src/images', f'{f_name}_{types}.jpg'), cv2.IMREAD_GRAYSCALE), f'{f_name}_{types}')
+            __do_gamma_correction(cv2.imread(path.join(f'images', f'{f_name}_{types}.jpg'), cv2.IMREAD_GRAYSCALE), f'{f_name}_{types}')
 
 
 # -----------------------------------------------------------------------------------------------
@@ -144,18 +146,18 @@ def calcerrors():
 
     # Abrindo todas as imagens originais e colocando no vetor
     for f_name in file_names:
-        original_images.append(cv2.imread(path.join('src/images', f'{f_name}.jpg'), cv2.IMREAD_GRAYSCALE))
+        original_images.append(cv2.imread(path.join('images', f'{f_name}.jpg'), cv2.IMREAD_GRAYSCALE))
     
-    # Criando os dicionários com todas as imagens "corrigidas"
+    # Criando os dicionarios com todas as imagens "corrigidas"
     for f_index in range(len(file_names)):
         all_gamma_images.append({})
         for types in image_types:
             for y in y_value:
-                all_gamma_images[f_index][f'{file_names[f_index]}_{types}_{y}.jpg'] = cv2.imread(path.join('src/output', f'{file_names[f_index]}_{types}_{y}.jpg'), cv2.IMREAD_GRAYSCALE)
+                all_gamma_images[f_index][f'{file_names[f_index]}_{types}_{y}.jpg'] = cv2.imread(path.join('output', f'{file_names[f_index]}_{types}_{y}.jpg'), cv2.IMREAD_GRAYSCALE)
 
     
     print('Gerando arquivo de saída....')
-    with open(path.join('src/output', 'results.txt'), 'w', newline='') as f:
+    with open(path.join('output', 'results.txt'), 'w', newline='') as f:
         
         f.writelines(['Imagem | ', 'Erro maximo | ', 'Erro medio absoluto | ', 'Erro medio quadratico | ', 'Raiz do erro medio quadratico | ', 'Coeficiente de Jaccard | \n\n'])
         
@@ -176,8 +178,8 @@ def calcerrors():
 
                 
 
-    print("Arquivo de saída com os resultados: " + path.join('src/output', 'results.txt'))
+    print("Arquivo de saída com os resultados: " + path.join('output', 'results.txt'))
 
-if __name__ == '__main__':
+def run():
     gamma_correction()
     calcerrors()

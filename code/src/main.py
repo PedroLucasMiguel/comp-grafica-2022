@@ -1,16 +1,12 @@
 import os
-from ex5_s1 import ex5_s1
-from ex6_s1 import ex6_s1
-from ex7_s1 import ex7_s1
-from ex8_s1 import ex8_s1
-from ex3_s2 import ex3_s2
+from ex4_s4 import ex4_s4
+from ex4_s5 import ex4_s5
+from ex5_s5 import ex5_s5
 
 execute = {
-    1 : ex5_s1.run, 
-    2 : ex6_s1.run,
-    3 : ex7_s1.run,
-    4 : ex8_s1.run,
-    5 : ex3_s2.run,
+    1 : ex4_s4.run, 
+    2 : ex4_s5.run,
+    3 : ex5_s5.run,
 }
 
 if __name__ == '__main__':
@@ -22,19 +18,17 @@ if __name__ == '__main__':
     while not stop:
         print('\nResultados das atividades!\n')
         print('Escolha qual exercício deve ser executado:')
-        print('[1] - Exercício 5 (Slide 1)')
-        print('[2] - Exercício 6 (Slide 1)')
-        print('[3] - Exercício 7 (Slide 1)')
-        print('[4] - Exercício 8 (Slide 1)')
-        print('[5] - Exercício 3 (Slide 2)')
-        print('[6] - Sair')
+        print('[1] - Exercício 4 (Slide 4)')
+        print('[2] - Exercício 4 (Slide 5)')
+        print('[3] - Exercício 5 (Slide 5)')
+        print('[4] - Sair')
 
         i = int(input('Resposta: '))
 
-        if ( i < 0 or i > 6):
+        if ( i < 0 or i > 4):
             print('Valor inválido')
 
-        if (i == 6):
+        if (i == 4):
             stop = True
         
         else:
