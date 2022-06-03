@@ -61,6 +61,11 @@ def __equalizeHistogram(img, img_name):
 
 
 def run():
+    '''
+        Talvez implementar um sub-menu nesta etapa com as opções de:
+            - Gerar os resultados em imagens separadas
+            - Gerar resultados em uma única imagem.
+    '''
     img1 = cv2.imread(path.join('images', 'frutas.bmp'), cv2.IMREAD_GRAYSCALE)
     img2 = cv2.imread(path.join('images', 'mammogram.bmp'), cv2.IMREAD_GRAYSCALE)
     img3 = cv2.imread(path.join('images', 'Moon.tif'), cv2.IMREAD_GRAYSCALE)
