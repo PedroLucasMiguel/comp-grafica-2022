@@ -3,9 +3,9 @@ import cv2
 from math import sqrt
 from os import path
 
-# Calculando o valor da correcao gamma
+# Calculando o valor da correção gamma
 def __calc_gamma_correction(f, c, y):
-    return c*pow((f + 1), y)
+    return pow((f/255), 1/y)*255
 
 def __do_gamma_correction(f, f_name):
 
@@ -33,7 +33,7 @@ def __do_gamma_correction(f, f_name):
         print(f'Aplicando correção com gama = {g}...')
         for i in range(s[0]):
             for j in range(s[1]):
-                imgs[imgs_index] = np.append(imgs[imgs_index], f[i][j] + __calc_gamma_correction(f[i][j], 1, g))
+                imgs[imgs_index] = np.append(imgs[imgs_index], __calc_gamma_correction(f[i][j], 1, g))
         
         aux = imgs[imgs_index]
         aux = np.reshape(aux, f.shape)

@@ -100,11 +100,11 @@ def jaccard(i1, i2):
 
 # -----------------------------------------------------------------------------------------------
 
-# Calculo de correcao gamma
-def __calc_gamma_correction(f, c, y):
-    return c*pow((f + 1), y)
+# Calculo de correção gamma
+def __calc_gamma_correction(f, y):
+    return pow((f/255), 1/y)*255
 
-# Realiza o processo de correcao
+# Realiza o processo de correção
 def __do_gamma_correction(f, f_name):
     s = f.shape
     i = np.array([])
@@ -112,8 +112,8 @@ def __do_gamma_correction(f, f_name):
 
     for y in range(s[0]):
         for x in range(s[1]):
-            i = np.append(i, f[y][x] + __calc_gamma_correction(f[y][x], 1, 0.4))
-            i2 = np.append(i2, f[y][x] + __calc_gamma_correction(f[y][x], 1, 0.04))
+            i = np.append(i, __calc_gamma_correction(f[y][x], 0.4))
+            i2 = np.append(i2, __calc_gamma_correction(f[y][x], 0.04))
     
     i = np.reshape(i, f.shape)
     i2 = np.reshape(i2, f.shape)
