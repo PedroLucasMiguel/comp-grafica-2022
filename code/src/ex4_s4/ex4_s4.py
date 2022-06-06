@@ -3,7 +3,7 @@ import numpy as np
 import cv2
 from math import sqrt
 from os import path
-import csv
+import os
 
 # Erro Máximo
 def max_error(i1, i2):
@@ -127,6 +127,7 @@ def gamma_correction():
 
     for f_name in file_names:
         for types in image_types:
+            print(f'Processando: {f_name}_{types}.jpg')
             __do_gamma_correction(cv2.imread(path.join(f'images', f'{f_name}_{types}.jpg'), cv2.IMREAD_GRAYSCALE), f'{f_name}_{types}')
 
 
