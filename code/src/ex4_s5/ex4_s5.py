@@ -5,8 +5,9 @@ from matplotlib import pyplot as plt
 
 DEPTH = 8
 
+# Função responsável por criar as imagens dos histogramas
 def __createHistogram(img, img_name):
-
+    # Após receber a imagem (img) como parâmetro, constrói a imagem do histograma
     scale_max = pow(2, DEPTH)
 
     plt.hist(img.ravel(), scale_max, [0, scale_max])
@@ -53,19 +54,16 @@ def __equalizeHistogram(img, img_name):
         for j in range(img.shape[1]):
             img[i][j] = hist[img[i][j]][1]
 
+    # Salva imagem equalizada
     cv2.imwrite(path.join('output', f'{img_name}-eh.jpg'), img)
 
     print(f'Imagem equalizada salva em: ' + path.join('output', f'{img_name}-eh.jpg'))
 
+    # Cria histograma
     __createHistogram(img, img_name)
 
 
 def run():
-    '''
-        Talvez implementar um sub-menu nesta etapa com as opções de:
-            - Gerar os resultados em imagens separadas
-            - Gerar resultados em uma única imagem.
-    '''
     img1 = cv2.imread(path.join('images', 'frutas.bmp'), cv2.IMREAD_GRAYSCALE)
     img2 = cv2.imread(path.join('images', 'mammogram.bmp'), cv2.IMREAD_GRAYSCALE)
     img3 = cv2.imread(path.join('images', 'Moon.tif'), cv2.IMREAD_GRAYSCALE)

@@ -25,7 +25,7 @@ def __do_gamma_correction(f, f_name):
     )
 
     s = f.shape
-    imgs = [] # Array que vai guardar as correcees
+    imgs = [] # Array que vai guardar as correções
     imgs_index = 0
 
     for g in gamma_range:
