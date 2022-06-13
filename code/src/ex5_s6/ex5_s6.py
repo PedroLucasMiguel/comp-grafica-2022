@@ -93,7 +93,7 @@ def jaccard(i1, i2):
 
         for i in range(row):
             for j in range(col):
-                if abs(int(i1[i][j]) - int(i2[i][j])) <= 25.5: # 25.5 = valor de tolerância
+                if abs(int(i1[i][j]) - int(i2[i][j])) <= 10: # 10 = valor de tolerância
                     v.append(1)
                 else:
                     v.append(0)
@@ -103,11 +103,10 @@ def jaccard(i1, i2):
         return v/(row * col)
 
 # ----------------------------------------- Ruídos ----------------------------------------------------------
+# Ruído sal e pimenta
 def salt_and_peper_noise(img, dist):
     
     img_shape = img.shape
-
-    new_img = np.zeros(shape=img.shape)
 
     for i in range(img_shape[0]):
         for j in range(img_shape[1]):
@@ -122,8 +121,6 @@ def gausian_noise(img, dist):
 
     row, col = img.shape
     colors = []
-
-    new_img = np.zeros(shape=img.shape)
 
     for i in range(0, 101, 5):
         colors.append(i)
