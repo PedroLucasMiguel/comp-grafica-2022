@@ -2,7 +2,7 @@ from hashlib import new
 from matplotlib.font_manager import json_dump
 import numpy as np
 import cv2
-from math import floor, sqrt
+from math import dist, floor, sqrt
 from os import path
 from matplotlib import pyplot as plt
 import json
@@ -223,9 +223,8 @@ def gaussian_filter(img, kernel_size):
 
 # ---------------------------- Calculando métricas ----------------------------------------------
 
-if __name__ == '__main__':
+def run():
 
-    
     image_names = ['a', 'b', 'c']
 
     image_filters = {
@@ -240,41 +239,63 @@ if __name__ == '__main__':
     images_with_noise = {}
     images_with_filter = {}
 
-    # TODO - Isso precisa ser dado pelo usuário
-    dist_sp = 10
-    dist_gaus = 3
+    dist_sp = 0
+    dist_gaus = 0
+    stop = False
+    
+    while not stop:
+        print('Digite o valor da distribuição para o ruído "Sal e Pimenta" em %')
+        dist_sp = float(input('Resposta: '))
+
+        if dist_sp <= 0 or dist_sp > 100:
+            print('\nERRO: Use distribuições entre 0-100%\n')
+        
+        else:
+            stop = True
+
+    stop = False
+
+    while not stop:
+        print('Digite o valor da distribuição para o ruído "Gaussiano" em %')
+        dist_gaus = float(input('Resposta: '))
+
+        if dist_gaus <= 0 or dist_gaus > 100:
+            print('\nERRO: Use distribuições entre 0-100%\n')
+        
+        else:
+            stop = True
+
+    print('\nIniciando....')
 
     for i in range(len(image_names)):
 
-        print(f'Aplicando ruídos na imaegm "{image_names[i]}.jpg"')
+        print(f'Aplicando ruídos na imagem "{image_names[i]}.jpg"')
 
-        original_images.append(cv2.imread(path.join('src/images', f'{image_names[i]}.jpg'), cv2.IMREAD_GRAYSCALE)) # Salvando as imagens originais
+        original_images.append(cv2.imread(path.join('images', f'{image_names[i]}.jpg'), cv2.IMREAD_GRAYSCALE)) # Salvando as imagens originais
 
         images_with_noise[image_names[i]] = [] # Criando os arrays que terão as imagens com ruído
 
         # Sal e pimenta
         images_with_noise[image_names[i]].append(salt_and_peper_noise(original_images[i].copy(), dist_sp))
-        cv2.imwrite(path.join('src/output', f'{image_names[i]}_sp_{dist_sp}.png'), images_with_noise[image_names[i]][0])
+        cv2.imwrite(path.join('output', f'{image_names[i]}_sp_{dist_sp}.png'), images_with_noise[image_names[i]][0])
 
         # Gaussiano
         images_with_noise[image_names[i]].append(gausian_noise(original_images[i].copy(), dist_gaus))
-        cv2.imwrite(path.join('src/output', f'{image_names[i]}_gaus_{dist_gaus}.png'), images_with_noise[image_names[i]][1])
-
-        print(np.array_equal(images_with_noise[image_names[i]][0], images_with_noise[image_names[i]][1]))
+        cv2.imwrite(path.join('output', f'{image_names[i]}_gaus_{dist_gaus}.png'), images_with_noise[image_names[i]][1])
 
     # Criando imagens corrigidas
     for i in image_names:
         images_with_filter[i] = {} # 1° Chave: nome simples da imagem
         for f in image_filters.keys():
             images_with_filter[i][f] = [] # 2° Chave: Filtro da imagem
-            print(f'Aplicando filtro "{f}" na imagem "{i}.jpg"')
+            print(f'Aplicando filtro "{f}" nas imagens "{i}"')
             for k in kernels_sizes:
                 aux = image_filters[f](images_with_noise[i][0], k)
-                cv2.imwrite(path.join('src/output', f'{i}(f)_sp_{f}_{k}.png'), img=aux)
+                cv2.imwrite(path.join('output', f'{i}(f)_sp_{f}_{k}.png'), img=aux)
                 images_with_filter[i][f].append(aux)
 
                 aux = image_filters[f](images_with_noise[i][1], k)
-                cv2.imwrite(path.join('src/output', f'{i}(f)_gaus_{f}_{k}.png'), img=aux)
+                cv2.imwrite(path.join('output', f'{i}(f)_gaus_{f}_{k}.png'), img=aux)
                 images_with_filter[i][f].append(aux)
 
     quick_translate = {
@@ -284,8 +305,10 @@ if __name__ == '__main__':
         3: '(Gaussiano) k = 5'
     }
 
+    print('Gerando arquivo com as métricas de erro...')
+
     # Calculando os erros e exportando para um arquivo         
-    with open(path.join('src/output', 'results.txt'), 'w', newline='') as f:
+    with open(path.join('output', 'results.txt'), 'w', newline='') as f:
         
         f.writelines(['Imagem | ', 'Erro maximo | ', 'Erro medio absoluto | ', 'Erro medio quadratico | ', 'Raiz do erro medio quadratico | ', 'Coeficiente de Jaccard | \n\n'])
         
@@ -305,6 +328,6 @@ if __name__ == '__main__':
                         f'| {jaccard(original_images[o_image], images_with_filter[image_names[o_image]][filter][f_image])} \n\n'
                     ])                
 
-    print("Arquivo de saída com os resultados: " + path.join('src/output', 'results.txt'))
+    print("Os arquivos de saída se encontram em: output")
 
     pass
