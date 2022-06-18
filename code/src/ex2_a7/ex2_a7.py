@@ -1,7 +1,9 @@
 import numpy as np
 import cv2
 from os import path
-from matplotlib import pyplot as plt
+
+
+np.seterr(divide="ignore")
 
 
 def gausian_noise(img, dist):
@@ -36,8 +38,12 @@ def run():
 
     spec = np.log(np.abs(mag))
 
+    spec = np.uint8(spec / np.max(spec) * 255)
+
+    spec = cv2.applyColorMap(spec, cv2.COLORMAP_JET)
+
     cv2.imwrite(path.join("src", "images", "img_exercicio2_noise_spec.png"),
-                spec / np.max(spec) * 255)
+                spec)
 
     filter_gaussian = cv2.imread(path.join("src", "images", "filter_gaussian.png"),
                                  cv2.IMREAD_GRAYSCALE)
@@ -50,10 +56,17 @@ def run():
     new_spec_gaussian = np.log(np.abs(new_mag_gaussian))
     new_spec_pass = np.log(np.abs(new_mag_pass))
 
+    new_spec_gaussian = np.uint8(
+        new_spec_gaussian / np.max(new_spec_gaussian) * 255)
+    new_spec_pass = np.uint8(new_spec_pass / np.max(new_spec_pass) * 255)
+
+    new_spec_gaussian = cv2.applyColorMap(new_spec_gaussian, cv2.COLORMAP_JET)
+    new_spec_pass = cv2.applyColorMap(new_spec_pass, cv2.COLORMAP_JET)
+
     cv2.imwrite(path.join("src", "images", "new_spec_gaussian.png"),
-                new_spec_gaussian / np.max(new_spec_gaussian) * 255)
+                new_spec_gaussian)
     cv2.imwrite(path.join("src", "images", "new_spec_pass.png"),
-                new_spec_pass / np.max(new_spec_pass) * 255)
+                new_spec_pass)
 
     real_gaussian, imag_gaussian = cv2.polarToCart(
         np.float32(new_mag_gaussian), phase)
