@@ -1,10 +1,14 @@
 import os
-from ex5_s6 import ex5_s6
+from ex2_a7 import ex2_a7
 
-if __name__ == '__main__':
+
+def main():
     os.system('cls' if os.name == 'nt' else 'clear')
-    print('\n-----------------Resultados---------------------\n')
-    ex5_s6.run()
-    print('\n--------------Fim de resultados-----------------\n')
+    ex2_a7.run()
+    print('\n-----------------Resultados escritos na pasta images---------------------\n')
     input('Pressione ENTER para finalizar...')
     os.system('cls' if os.name == 'nt' else 'clear')
+
+
+if __name__ == '__main__':
+    main()
