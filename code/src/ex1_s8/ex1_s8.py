@@ -5,7 +5,6 @@ from os import path
 from matplotlib import pyplot as plt
 from math import floor
 from numba import njit
-######################################################################################################
 
 @njit
 def __calcNormalizedHistogram(img):
@@ -22,8 +21,6 @@ def __calcNormalizedHistogram(img):
     for i in img:
         for j in i:
             hist[j][1] = hist[j][1] + 1
-    
-    #print(hist)
 
     # Normalizando histograma
     for i in range(l+1):
@@ -35,7 +32,6 @@ def __calcNormalizedHistogram(img):
 def __doOtsu(img):
     hist = __calcNormalizedHistogram(img)
     l = np.amax(img) + 1 # Definindo quantidade de níveis de cinza
-    total_pixels = img.shape[0] * img.shape[1]
 
     v_max = -1
     all_k = []
@@ -121,30 +117,122 @@ def __doOtsu(img):
                             all_k[2] = k3
                             all_k[3] = k4
 
-    print(all_k, v_max)
+    # Esse método de mostrar os resultados é requerido pelo @njit
+    print('\nValores de K:')
+    print(all_k)
 
+    print('\nVariancia final:')
+    print(v_max)
+
+    img_colored = np.zeros(shape=img.shape, dtype=np.uint8)
+    img_k1 = np.zeros(shape=img.shape, dtype=np.uint8)
+    img_k2 = np.zeros(shape=img.shape, dtype=np.uint8)
+    img_k3 = np.zeros(shape=img.shape, dtype=np.uint8)
+    img_k4 = np.zeros(shape=img.shape, dtype=np.uint8)
+
+    # Criando filtro com K1
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            if img[i][j] > all_k[0]:
+                img_k1[i][j] = 255
+            else:
+                img_k1[i][j] = 0
+    
+    # Criando filtro com K2
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            if img[i][j] > all_k[1]:
+                img_k2[i][j] = 255
+            else:
+                img_k2[i][j] = 0
+
+    # Criando filtro com K3
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            if img[i][j] > all_k[2]:
+                img_k3[i][j] = 255
+            else:
+                img_k3[i][j] = 0
+
+    # Criando filtro com K4
     for i in range(img.shape[0]):
         for j in range(img.shape[1]):
             if img[i][j] > all_k[3]:
-                img[i][j] = 255
-            elif img[i][j] <= all_k[0] :
-                img[i][j] = 0
-            elif img[i][j] > all_k[0]  and img[i][j] <= all_k[1] :
-                img[i][j] = 60
-            elif img[i][j] > all_k[1]  and img[i][j] <= all_k[2] :
-                img[i][j] = 130
-            elif img[i][j] > all_k[2]  and img[i][j] <= all_k[3] :
-                img[i][j] = 180
+                img_k4[i][j] = 255
+            else:
+                img_k4[i][j] = 0
 
-    return img
+    # Criando imagem com os filtros coloridos
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            if img[i][j] > all_k[3]:
+                img_colored[i][j] = 255
+            elif img[i][j] <= all_k[0] :
+                img_colored[i][j] = 0
+            elif img[i][j] > all_k[0]  and img[i][j] <= all_k[1] :
+                img_colored[i][j] = 60
+            elif img[i][j] > all_k[1]  and img[i][j] <= all_k[2] :
+                img_colored[i][j] = 130
+            elif img[i][j] > all_k[2]  and img[i][j] <= all_k[3] :
+                img_colored[i][j] = 180
+
+    return (img_colored, (img_k1, all_k[0]) , (img_k2, all_k[1]), (img_k3, all_k[2]), (img_k4, all_k[3]))
     
 if __name__ == '__main__':
     
     img = cv2.imread(path.join('src', 'images', 'img_seg.jpg'), cv2.IMREAD_GRAYSCALE)
-    cv2.imwrite(path.join('src', 'output', f'output_colored.png'), cv2.applyColorMap(__doOtsu(img), cv2.COLORMAP_JET) )
-    #cv2.imwrite(path.join('src', 'output', f'a_plz.png'), __doOtsu(img) )
-    #imgs = __doOtsu(img)
-    #cv2.imwrite(path.join('src', 'output', f'1.png'), imgs[0])
-    #cv2.imwrite(path.join('src', 'output', f'2.png'), imgs[1])
-    #cv2.imwrite(path.join('src', 'output', f'3.png'), imgs[2])
-    #cv2.imwrite(path.join('src', 'output', f'4.png'), imgs[3])
+
+    imgs = __doOtsu(img)
+
+    # Salvando mascaras coloridas
+    cv2.imwrite(path.join('src', 'output', f'masks_colored.png'), cv2.applyColorMap(imgs[0], cv2.COLORMAP_JET))
+
+    # Salvando as mascaras puras
+    for i in range(1, len(imgs)):
+        cv2.imwrite(path.join('src', 'output', f'mask_k_{imgs[i][1]}.png'), imgs[i][0])
+    
+    img_seg_k1 = np.zeros(shape=img.shape, dtype=np.uint8)
+    img_seg_k2 = np.zeros(shape=img.shape, dtype=np.uint8)
+    img_seg_k3 = np.zeros(shape=img.shape, dtype=np.uint8)
+    img_seg_k4 = np.zeros(shape=img.shape, dtype=np.uint8)
+    
+    # Salvando imagens segmentadas
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            if imgs[1][0][i][j] == 0:
+                img_seg_k1[i][j] = img[i][j]
+            else:
+                img_seg_k1[i][j] = 0
+    
+    cv2.imwrite(path.join('src', 'output', f'seg_k_{imgs[1][1]}.png'), img_seg_k1)
+    
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            if imgs[2][0][i][j] == 0:
+                img_seg_k2[i][j] = img[i][j]
+            else:
+                img_seg_k2[i][j] = 0
+
+    cv2.imwrite(path.join('src', 'output', f'seg_k_{imgs[2][1]}.png'), img_seg_k2)
+
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            if imgs[3][0][i][j] == 0:
+                img_seg_k3[i][j] = img[i][j]
+            else:
+                img_seg_k3[i][j] = 0
+
+    cv2.imwrite(path.join('src', 'output', f'seg_k_{imgs[3][1]}.png'), img_seg_k3)
+
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            if imgs[4][0][i][j] == 0:
+                img_seg_k4[i][j] = img[i][j]
+            else:
+                img_seg_k4[i][j] = 0
+
+    cv2.imwrite(path.join('src', 'output', f'seg_k_{imgs[4][1]}.png'), img_seg_k4)
+
+    print('Imagens salvas em: output')
+
+    
