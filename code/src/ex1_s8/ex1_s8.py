@@ -41,8 +41,7 @@ def __doOtsu(img):
     all_k = []
 
     for k1 in range(0, l):
-        
-        print(k1)
+        print(f'Processing.... {k1}/{l-1}')
         w0 = 0.0
         for w0a in range(0, k1):
             w0 = w0 + hist[w0a][1]
@@ -108,8 +107,6 @@ def __doOtsu(img):
                     
                     v = (w0*((u-u0)**2)) + (w1*((u-u1)**2)) + (w2*((u-u2)**2)) + (w3*((u-u3)**2)) + (w4*((u-u4)**2))
 
-                    #print(v)
-
                     if v > v_max:
                         v_max = v
                         if len(all_k) == 0:
@@ -144,10 +141,7 @@ def __doOtsu(img):
 if __name__ == '__main__':
     
     img = cv2.imread(path.join('src', 'images', 'img_seg.jpg'), cv2.IMREAD_GRAYSCALE)
-
-    #__doOtsu(img)
-
-    cv2.imwrite(path.join('src', 'output', f'a_plz.png'), cv2.applyColorMap(__doOtsu(img), cv2.COLORMAP_JET) )
+    cv2.imwrite(path.join('src', 'output', f'output_colored.png'), cv2.applyColorMap(__doOtsu(img), cv2.COLORMAP_JET) )
     #cv2.imwrite(path.join('src', 'output', f'a_plz.png'), __doOtsu(img) )
     #imgs = __doOtsu(img)
     #cv2.imwrite(path.join('src', 'output', f'1.png'), imgs[0])
