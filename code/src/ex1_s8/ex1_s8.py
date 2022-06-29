@@ -1,9 +1,6 @@
-from turtle import right
 import cv2
 import numpy as np
 from os import path
-from matplotlib import pyplot as plt
-from math import floor
 from numba import njit
 
 @njit
@@ -33,21 +30,33 @@ def __doOtsu(img):
     hist = __calcNormalizedHistogram(img)
     l = np.amax(img) + 1 # Definindo quantidade de níveis de cinza
 
-    v_max = -1
-    all_k = []
+    v_max = -1 # Variável que guarda a maior variância
+    all_k = [] # Lista que guarda todos os valores de K
 
+    print('Aguarde... O processo pode demorar um pouco.')
+
+    # Calculando possibilidades de K1
     for k1 in range(0, l):
-        print(f'Processing.... {k1}/{l-1}')
+        print(f'Processando.... {k1}/{l-1}')
+        
+        # Calculando a porcentagem w0
         w0 = 0.0
         for w0a in range(0, k1):
             w0 = w0 + hist[w0a][1]
 
+        # Passa para a próxima iteração se w0 for igual a zero
         if w0 < 1.e-6:
             continue
-
+        
+        # Calcula a média u0
         u0 = 0
         for u0a in range(0, k1):
             u0 = u0 + (u0a * hist[u0a][1])/w0
+
+        '''
+            O Processo descrito para K1 é análogo aos processos
+            de K2 até K4.
+        '''
 
         # k2
         for k2 in range(k1 + 1, l):
@@ -99,12 +108,17 @@ def __doOtsu(img):
                     for u4a in range(k4, l):
                         u4 = u4 + (u4a * hist[u4a][1])/w4
 
+                    # Calculando a média geral
                     u = (w0 * u0) + (w1 * u1) + (w2 * u2) + (w3 * u3) + (w4 * u4)
                     
+                    # Calculando a variância
                     v = (w0*((u-u0)**2)) + (w1*((u-u1)**2)) + (w2*((u-u2)**2)) + (w3*((u-u3)**2)) + (w4*((u-u4)**2))
-
+                    
+                    # Verifica se a variância obtida é maior do que a armazenda
                     if v > v_max:
-                        v_max = v
+                        v_max = v # Salva a nova variância
+
+                        # Salva os valores de K
                         if len(all_k) == 0:
                             all_k.append(k1)
                             all_k.append(k2)
@@ -178,18 +192,18 @@ def __doOtsu(img):
 
     return (img_colored, (img_k1, all_k[0]) , (img_k2, all_k[1]), (img_k3, all_k[2]), (img_k4, all_k[3]))
     
-if __name__ == '__main__':
+def run():
     
-    img = cv2.imread(path.join('src', 'images', 'img_seg.jpg'), cv2.IMREAD_GRAYSCALE)
+    img = cv2.imread(path.join('images', 'img_seg.jpg'), cv2.IMREAD_GRAYSCALE)
 
     imgs = __doOtsu(img)
 
     # Salvando mascaras coloridas
-    cv2.imwrite(path.join('src', 'output', f'masks_colored.png'), cv2.applyColorMap(imgs[0], cv2.COLORMAP_JET))
+    cv2.imwrite(path.join('output', f'masks_colored.png'), cv2.applyColorMap(imgs[0], cv2.COLORMAP_JET))
 
     # Salvando as mascaras puras
     for i in range(1, len(imgs)):
-        cv2.imwrite(path.join('src', 'output', f'mask_k_{imgs[i][1]}.png'), imgs[i][0])
+        cv2.imwrite(path.join('output', f'mask_k_{imgs[i][1]}.png'), imgs[i][0])
     
     img_seg_k1 = np.zeros(shape=img.shape, dtype=np.uint8)
     img_seg_k2 = np.zeros(shape=img.shape, dtype=np.uint8)
@@ -204,7 +218,7 @@ if __name__ == '__main__':
             else:
                 img_seg_k1[i][j] = 0
     
-    cv2.imwrite(path.join('src', 'output', f'seg_k_{imgs[1][1]}.png'), img_seg_k1)
+    cv2.imwrite(path.join('output', f'seg_k_{imgs[1][1]}.png'), img_seg_k1)
     
     for i in range(img.shape[0]):
         for j in range(img.shape[1]):
@@ -213,7 +227,7 @@ if __name__ == '__main__':
             else:
                 img_seg_k2[i][j] = 0
 
-    cv2.imwrite(path.join('src', 'output', f'seg_k_{imgs[2][1]}.png'), img_seg_k2)
+    cv2.imwrite(path.join('output', f'seg_k_{imgs[2][1]}.png'), img_seg_k2)
 
     for i in range(img.shape[0]):
         for j in range(img.shape[1]):
@@ -222,7 +236,7 @@ if __name__ == '__main__':
             else:
                 img_seg_k3[i][j] = 0
 
-    cv2.imwrite(path.join('src', 'output', f'seg_k_{imgs[3][1]}.png'), img_seg_k3)
+    cv2.imwrite(path.join('output', f'seg_k_{imgs[3][1]}.png'), img_seg_k3)
 
     for i in range(img.shape[0]):
         for j in range(img.shape[1]):
@@ -231,8 +245,8 @@ if __name__ == '__main__':
             else:
                 img_seg_k4[i][j] = 0
 
-    cv2.imwrite(path.join('src', 'output', f'seg_k_{imgs[4][1]}.png'), img_seg_k4)
+    cv2.imwrite(path.join('output', f'seg_k_{imgs[4][1]}.png'), img_seg_k4)
 
-    print('Imagens salvas em: output')
+    print('\nImagens salvas em: output')
 
     
