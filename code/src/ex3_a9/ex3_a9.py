@@ -14,7 +14,7 @@ def __check_matrix_equality(m1, m2):
 
 
 def __erosion(img, element):
-    result = np.zeros(img.shape, np.uint)
+    result = np.zeros(img.shape)
     for i in range(element["center"][0], img.shape[0] - element["center"][0]):
         for j in range(element["center"][1], img.shape[1] - element["center"][1]):
             if img[i, j] > 0 and __check_matrix_equality(img[i-element["center"][0]:i+element["center"][0]+1, j-element["center"][1]:j+element["center"][1]+1], element["mask"]):
@@ -23,7 +23,7 @@ def __erosion(img, element):
 
 
 def __dilation(img, element):
-    result = np.zeros(img.shape, np.uint)
+    result = np.zeros(img.shape)
     for i in range(element["center"][0], img.shape[0] - element["center"][0]):
         for j in range(element["center"][1], img.shape[1] - element["center"][1]):
             if img[i][j] > 0:
@@ -33,7 +33,7 @@ def __dilation(img, element):
 
 
 def run():
-    img = cv.imread(path.join("src", "images", "Img3.bmp"),
+    img = cv.imread(path.join("images", "Img3.bmp"),
                     cv.IMREAD_GRAYSCALE)
     for i in range(img.shape[0]):
         for j in range(img.shape[1]):
@@ -46,13 +46,13 @@ def run():
         for j in range(img_eroded.shape[1]):
             if img_eroded[i, j] > 0:
                 img_eroded[i, j] = 255
-    cv.imwrite(path.join("src", "images", "Img3_eroded.bmp"), img_eroded)
+    cv.imwrite(path.join("output", "Img3_eroded.bmp"), img_eroded)
     img_dilated = __dilation(img_eroded, structuring_element)
     for i in range(img_dilated.shape[0]):
         for j in range(img_dilated.shape[1]):
             if img_dilated[i, j] > 0:
                 img_dilated[i, j] = 255
-    cv.imwrite(path.join("src", "images", "Img3_dilated.bmp"), img_dilated)
+    cv.imwrite(path.join("output", "Img3_dilated.bmp"), img_dilated)
 
 
 if __name__ == "__main__":

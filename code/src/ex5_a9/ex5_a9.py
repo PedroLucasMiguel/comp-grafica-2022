@@ -14,7 +14,7 @@ def __check_matrix_equality(m1, m2):
 
 
 def __erosion(img, element):
-    result = np.zeros(img.shape, np.uint)
+    result = np.zeros(img.shape)
     for i in range(element["center"][0], img.shape[0] - element["center"][0]):
         if i == 80:
             pass
@@ -27,7 +27,7 @@ def __erosion(img, element):
 
 
 def __dilation(img, element):
-    result = np.zeros(img.shape, np.uint)
+    result = np.zeros(img.shape)
     for i in range(element["center"][0], img.shape[0] - element["center"][0]):
         for j in range(element["center"][1], img.shape[1] - element["center"][1]):
             if img[i][j] > 0:
@@ -37,7 +37,7 @@ def __dilation(img, element):
 
 
 def run():
-    img = cv.imread(path.join("src", "images", "img2.bmp"),
+    img = cv.imread(path.join("images", "img2.bmp"),
                     cv.IMREAD_GRAYSCALE)
     for i in range(img.shape[0]):
         for j in range(img.shape[1]):
@@ -52,17 +52,17 @@ def run():
         for j in range(img_opened.shape[1]):
             if img_opened[i][j] > 0:
                 out[i][j] = 255
-    cv.imwrite(path.join("src", "images", "img2_opened.bmp"), out)
+    cv.imwrite(path.join("output", "img2_opened.bmp"), out)
     # Elemento estruturante de lado 3
     structuring_element_closed = {"mask": np.ones((3, 3)), "center": (1, 1)}
     img_closed = __erosion(__dilation(
         img_opened, structuring_element_closed), structuring_element_closed)
-    out = np.zeros(img_closed.shape, np.uint)
+    out = np.zeros(img_closed.shape)
     for i in range(out.shape[0]):
         for j in range(out.shape[1]):
             if img_closed[i][j] > 0:
                 out[i][j] = 255
-    cv.imwrite(path.join("src", "images", "img2_closed.bmp"), out)
+    cv.imwrite(path.join("output", "img2_closed.bmp"), out)
 
 
 if __name__ == "__main__":

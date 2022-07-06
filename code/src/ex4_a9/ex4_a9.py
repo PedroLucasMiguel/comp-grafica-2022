@@ -14,7 +14,7 @@ def __check_matrix_equality(m1, m2):
 
 
 def __erosion(img, element):
-    result = np.zeros(img.shape, np.uint)
+    result = np.zeros(img.shape)
     for i in range(element["center"][0], img.shape[0] - element["center"][0]):
         if i == 80:
             pass
@@ -27,7 +27,7 @@ def __erosion(img, element):
 
 
 def __dilation(img, element):
-    result = np.zeros(img.shape, np.uint)
+    result = np.zeros(img.shape)
     for i in range(element["center"][0], img.shape[0] - element["center"][0]):
         for j in range(element["center"][1], img.shape[1] - element["center"][1]):
             if img[i][j] > 0:
@@ -37,7 +37,7 @@ def __dilation(img, element):
 
 
 def __limiarization(img, threshold):
-    result = np.zeros(img.shape, np.uint)
+    result = np.zeros(img.shape)
     for i in range(img.shape[0]):
         for j in range(img.shape[1]):
             if img[i][j] < threshold:
@@ -46,7 +46,7 @@ def __limiarization(img, threshold):
 
 
 def run():
-    img = cv.imread(path.join("src", "images", "Img4.bmp"),
+    img = cv.imread(path.join("images", "Img4.bmp"),
                     cv.IMREAD_GRAYSCALE)
     # Valor do limiar: 220
     img_limiarized = __limiarization(img, 220)
@@ -55,7 +55,7 @@ def run():
         for j in range(out.shape[1]):
             if img_limiarized[i][j] > 0:
                 out[i][j] = 255
-    cv.imwrite(path.join("src", "images", "Img4_limiarized.bmp"), out)
+    cv.imwrite(path.join("output", "Img4_limiarized.bmp"), out)
     # Elemento estruturante quadrado de lado 7
     structuring_element = {"mask": np.ones((7, 7), np.uint), "center": (3, 3)}
     img_opened = __dilation(
@@ -64,7 +64,7 @@ def run():
         for j in range(img_opened.shape[1]):
             if img_opened[i][j] > 0:
                 img_opened[i][j] = 255
-    cv.imwrite(path.join("src", "images", "Img4_opened.bmp"), img_opened)
+    cv.imwrite(path.join("output", "Img4_opened.bmp"), img_opened)
 
 
 if __name__ == "__main__":
