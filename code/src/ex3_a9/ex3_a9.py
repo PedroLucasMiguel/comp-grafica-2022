@@ -13,6 +13,7 @@ def __check_matrix_equality(m1, m2):
     return True
 
 
+# Erosão
 def __erosion(img, element):
     result = np.zeros(img.shape)
     for i in range(element["center"][0], img.shape[0] - element["center"][0]):
@@ -21,7 +22,7 @@ def __erosion(img, element):
                 result[i, j] = 1
     return result
 
-
+# Dilatação
 def __dilation(img, element):
     result = np.zeros(img.shape)
     for i in range(element["center"][0], img.shape[0] - element["center"][0]):
@@ -33,26 +34,34 @@ def __dilation(img, element):
 
 
 def run():
+    
     img = cv.imread(path.join("images", "Img3.bmp"),
                     cv.IMREAD_GRAYSCALE)
+                    
     for i in range(img.shape[0]):
         for j in range(img.shape[1]):
             if img[i, j] > 0:
                 img[i, j] = 1
+
+    # Definindo elemento estruturante e o seu centro
     structuring_element = {"mask": np.ones(
         (13, 13), np.uint), "center": (6, 6)}
+
+    # Realizando erosão
     img_eroded = __erosion(img, structuring_element)
     for i in range(img_eroded.shape[0]):
         for j in range(img_eroded.shape[1]):
             if img_eroded[i, j] > 0:
                 img_eroded[i, j] = 255
-    cv.imwrite(path.join("output", "Img3_eroded.bmp"), img_eroded)
+    cv.imwrite(path.join("output", "Img3_eroded.png"), img_eroded)
+
+    # Realizando dilatação
     img_dilated = __dilation(img_eroded, structuring_element)
     for i in range(img_dilated.shape[0]):
         for j in range(img_dilated.shape[1]):
             if img_dilated[i, j] > 0:
                 img_dilated[i, j] = 255
-    cv.imwrite(path.join("output", "Img3_dilated.bmp"), img_dilated)
+    cv.imwrite(path.join("output", "Img3_dilated.png"), img_dilated)
 
 
 if __name__ == "__main__":
