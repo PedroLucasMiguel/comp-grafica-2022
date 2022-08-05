@@ -5,6 +5,7 @@ from os import path
 from math import floor, log2
 import matplotlib.pyplot as plt
 
+# Responsável pela criação de histogramas
 def __createHistogram(img, ax, title):
 
     # Calculando profundidade da imagem
@@ -52,6 +53,26 @@ def __equalizeHistogram(img):
         for j in range(img.shape[1]):
             img[i][j] = hist[img[i][j]][1]
 
+def __deviation(img):
+    
+    n = img.shape[0] * img.shape[1]
+    s = 0.0
+
+    # Calculando a média
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            s = s + img[i][j]
+
+    s = s/n
+
+    d = 0
+
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            d = d + ((img[i][j] - s)**2)
+
+    return d/n
+
 
 if __name__ == '__main__':
     imgs = ['img1.bmp', 'img2.bmp', 'img3.JPG']
@@ -75,11 +96,12 @@ if __name__ == '__main__':
             stop = True
 
         else:
+            print('\n\nIniciando o processso para:', imgs[i])
+            img = cv2.imread(path.join('src', 'images', imgs[i]))
+
             # Criando os histogramas para a imagem original
             fig1, axs1 = plt.subplots(2, 2)
             fig1.set_size_inches(14, 10)
-            print('Iniciando o processso para:', imgs[i])
-            img = cv2.imread(path.join('src', 'images', imgs[i]))
             axs1[0][0].imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
             axs1[0][0].set_title('Imagem Original')
             __createHistogram(img[:, :, 0], axs1[0][1], 'Canal: B')
@@ -87,15 +109,23 @@ if __name__ == '__main__':
             __createHistogram(img[:, :, 2], axs1[1][1], 'Canal: R')
             fig1.savefig(path.join('src', 'output', f'{imgs[i].split(".")[0]}-original-BGR.jpg'))
 
+            # Equalizando a imagem
             print('Equalizando os canais B-G-R da figura:', imgs[i])
-            fig1, axs1 = plt.subplots(2, 2)
-            fig1.set_size_inches(14, 10)
             print('Equalizando canal B')
             __equalizeHistogram(img[:, :, 0])
             print('Equalizando canal G')
             __equalizeHistogram(img[:, :, 1])
             print('Equalizando canal R')
             __equalizeHistogram(img[:, :, 2])
+
+            # Calculando variância
+            print(f"\nVariância em B: {__deviation(img[:, :, 0])}")
+            print(f"Variância em G: {__deviation(img[:, :, 1])}")
+            print(f"Variância em R: {__deviation(img[:, :, 2])}\n")
+
+            # Plota a imagem equalizada
+            fig1, axs1 = plt.subplots(2, 2)
+            fig1.set_size_inches(14, 10)
             axs1[0][0].imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
             axs1[0][0].set_title('Imagem Após Equalização dos Três Canais')
             __createHistogram(img[:, :, 0], axs1[0][1], 'Canal: B')
@@ -103,18 +133,25 @@ if __name__ == '__main__':
             __createHistogram(img[:, :, 2], axs1[1][1], 'Canal: R')
             fig1.savefig(path.join('src', 'output', f'{imgs[i].split(".")[0]}-BGR_Equalizado-BGR.jpg'))
 
-
+            # Caso as imagens equalizadas no canal I já tenham sido geradas, cria o histograma das mesmas
             if path.isfile(path.join('src', 'output', imgs_ei[i])):
+                img = cv2.imread(path.join('src', 'output', imgs_ei[i]))
+                
+                # Criando o plot
                 print('Criando histograma das imagens equalizadas no canal I')
                 fig1, axs1 = plt.subplots(2, 2)
                 fig1.set_size_inches(14, 10)
-                img = cv2.imread(path.join('src', 'output', imgs_ei[i]))
                 axs1[0][0].imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
                 axs1[0][0].set_title('Imagem HSI (I equalizado)')
                 __createHistogram(img[:, :, 0], axs1[0][1], 'Canal: B')
                 __createHistogram(img[:, :, 1], axs1[1][0], 'Canal: G')
                 __createHistogram(img[:, :, 2], axs1[1][1], 'Canal: R')
                 fig1.savefig(path.join('src', 'output', f'{imgs_ei[i].split(".")[0]}-I_Equalizado-BGR.jpg'))
+
+                # Calculando variância
+                print(f"\nVariância em B: {__deviation(img[:, :, 0])}")
+                print(f"Variância em G: {__deviation(img[:, :, 1])}")
+                print(f"Variância em R: {__deviation(img[:, :, 2])}\n")
 
                 print('Todos os resultados foram salvos em: output/')
                 input('Pressine ENTER para continuar')

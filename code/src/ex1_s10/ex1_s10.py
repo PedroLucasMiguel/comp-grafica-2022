@@ -3,6 +3,22 @@ import cv2
 import numpy as np
 from os import path
 from math import degrees, cos, radians, pi, acos
+from math import floor, log2
+import matplotlib.pyplot as plt
+
+def __createHistogram(img, ax, title):
+
+    # Calculando profundidade da imagem
+    depth = floor(log2(np.amax(img))) + 1
+
+    # Após receber a imagem (img) como parâmetro, constrói a imagem do histograma
+    scale_max = pow(2, depth)
+
+    ax.hist(img.ravel(), scale_max, [0, scale_max])
+
+    ax.set_title(title)
+    ax.set_xlabel("Níveis de cinza")
+    ax.set_ylabel("Quantidade de Pixels")
 
 # Função responsável pela equalização de histograma
 def __equalizeHistogram(img):
@@ -28,7 +44,7 @@ def __equalizeHistogram(img):
     for i in range(1, rows+1):
         hist[i][1] = hist[i-1][1] + hist[i][1]
 
-    # Calculando os niveis de cinza equalizados
+    # Calculando os niveis equalizados
     for i in range(rows+1):
         hist[i][1] = round(hist[i][1] * rows)
 
@@ -86,7 +102,7 @@ def __bgr2hsi(img):
 
 def __hsi2bgr(img):
 
-    img_bgr = np.zeros(shape=img.shape, dtype=int)
+    img_bgr = np.zeros(shape=img.shape, dtype=float)
 
     for i in range(img.shape[0]):
         for j in range(img.shape[1]):
@@ -127,9 +143,22 @@ if __name__ == '__main__':
 
     imgs = ['img1.bmp', 'img2.bmp', 'img3.JPG']
 
+    
     for img_name in imgs:
         print('Iniciando o processso para:', img_name)
         img = cv2.imread(path.join('src', 'images', img_name))
+        
+        # Criando plot da imagem original
+        fig1, axs1 = plt.subplots(2, 2)
+        fig1.set_size_inches(14, 10)
+        axs1[0][0].imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+        axs1[0][0].set_title('Imagem Original')
+        __createHistogram(img[:,:,0], axs1[0][1], 'Canal: B')
+        __createHistogram(img[:,:,1], axs1[1][0], 'Canal: G')
+        __createHistogram(img[:,:,2], axs1[1][1], 'Canal: R')
+        fig1.savefig(path.join('src', 'output', f'{img_name.split(".")[0]}-original-BGR.jpg'))
+
+        # Convertendo para hsi
         hsi_img = __bgr2hsi(img)
 
         # Criando matriz adicional para realizar o processamento necessário no canal I
@@ -147,4 +176,18 @@ if __name__ == '__main__':
                 hsi_img[i][j][2] = aux[i][j]/255
         
         print('Convertendo HSI -> BGR')
-        cv2.imwrite(path.join('src', 'output', f"{img_name.split('.')[0]}-eI.jpg"), __hsi2bgr(hsi_img))
+        bgr_img = __hsi2bgr(hsi_img)
+
+        cv2.imwrite(path.join('src', 'output', f"{img_name.split('.')[0]}-eI.jpg"), bgr_img)
+        
+        # Criando o plot após equalização
+        fig1, axs1 = plt.subplots(2, 2)
+        fig1.set_size_inches(14, 10)
+        # Isso é um workaround
+        axs1[0][0].imshow(cv2.cvtColor(cv2.imread(path.join('src', 'output', f"{img_name.split('.')[0]}-eI.jpg")), cv2.COLOR_BGR2RGB))
+        axs1[0][0].set_title('Imagem HSI (Equalizada em I)')
+        __createHistogram(bgr_img[:,:,0], axs1[0][1], 'Canal: B')
+        __createHistogram(bgr_img[:,:,1], axs1[1][0], 'Canal: G')
+        __createHistogram(bgr_img[:,:,2], axs1[1][1], 'Canal: R')
+        fig1.savefig(path.join('src', 'output', f'{img_name.split(".")[0]}-eI_Equalizado-BGR.jpg'))
+        
