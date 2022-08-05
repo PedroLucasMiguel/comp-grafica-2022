@@ -139,14 +139,14 @@ def __hsi2bgr(img):
 
     return img_bgr
 
-if __name__ == '__main__':
+def run():
 
     imgs = ['img1.bmp', 'img2.bmp', 'img3.JPG']
 
     
     for img_name in imgs:
         print('Iniciando o processso para:', img_name)
-        img = cv2.imread(path.join('src', 'images', img_name))
+        img = cv2.imread(path.join('images', img_name))
         
         # Criando plot da imagem original
         fig1, axs1 = plt.subplots(2, 2)
@@ -156,7 +156,7 @@ if __name__ == '__main__':
         __createHistogram(img[:,:,0], axs1[0][1], 'Canal: B')
         __createHistogram(img[:,:,1], axs1[1][0], 'Canal: G')
         __createHistogram(img[:,:,2], axs1[1][1], 'Canal: R')
-        fig1.savefig(path.join('src', 'output', f'{img_name.split(".")[0]}-original-BGR.jpg'))
+        fig1.savefig(path.join('output', f'{img_name.split(".")[0]}-original-BGR.jpg'))
 
         # Convertendo para hsi
         hsi_img = __bgr2hsi(img)
@@ -178,16 +178,16 @@ if __name__ == '__main__':
         print('Convertendo HSI -> BGR')
         bgr_img = __hsi2bgr(hsi_img)
 
-        cv2.imwrite(path.join('src', 'output', f"{img_name.split('.')[0]}-eI.jpg"), bgr_img)
+        cv2.imwrite(path.join('output', f"{img_name.split('.')[0]}-eI.jpg"), bgr_img)
         
         # Criando o plot após equalização
         fig1, axs1 = plt.subplots(2, 2)
         fig1.set_size_inches(14, 10)
         # Isso é um workaround
-        axs1[0][0].imshow(cv2.cvtColor(cv2.imread(path.join('src', 'output', f"{img_name.split('.')[0]}-eI.jpg")), cv2.COLOR_BGR2RGB))
+        axs1[0][0].imshow(cv2.cvtColor(cv2.imread(path.join('output', f"{img_name.split('.')[0]}-eI.jpg")), cv2.COLOR_BGR2RGB))
         axs1[0][0].set_title('Imagem HSI (Equalizada em I)')
         __createHistogram(bgr_img[:,:,0], axs1[0][1], 'Canal: B')
         __createHistogram(bgr_img[:,:,1], axs1[1][0], 'Canal: G')
         __createHistogram(bgr_img[:,:,2], axs1[1][1], 'Canal: R')
-        fig1.savefig(path.join('src', 'output', f'{img_name.split(".")[0]}-eI_Equalizado-BGR.jpg'))
+        fig1.savefig(path.join('output', f'{img_name.split(".")[0]}-eI_Equalizado-BGR.jpg'))
         

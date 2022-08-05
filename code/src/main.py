@@ -1,12 +1,10 @@
 import os
-from ex3_a9 import ex3_a9
-from ex4_a9 import ex4_a9
-from ex5_a9 import ex5_a9
+from ex1_s10 import ex1_s10
+from ex2_s10 import ex2_s10
 
 execute = {
-    1 : ex3_a9.run, 
-    2 : ex4_a9.run,
-    3 : ex5_a9.run,
+    1 : ex1_s10.run, 
+    2 : ex2_s10.run,
 }
 
 if __name__ == '__main__':
@@ -18,17 +16,16 @@ if __name__ == '__main__':
     while not stop:
         print('\nResultados das atividades!\n')
         print('Escolha qual exercício deve ser executado:')
-        print('[1] - Exercício 3')
-        print('[2] - Exercício 4')
-        print('[3] - Exercício 5')
-        print('[4] - Sair')
+        print('[1] - Exercício 1')
+        print('[2] - Exercício 2')
+        print('[3] - Sair')
 
         i = int(input('Resposta: '))
 
-        if ( i < 0 or i > 4):
+        if ( i < 0 or i > 3):
             print('Valor inválido')
 
-        if (i == 4):
+        if (i == 3):
             stop = True
         
         else:

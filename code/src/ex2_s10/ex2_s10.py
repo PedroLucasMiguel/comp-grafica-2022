@@ -74,7 +74,7 @@ def __deviation(img):
     return d/n
 
 
-if __name__ == '__main__':
+def run():
     imgs = ['img1.bmp', 'img2.bmp', 'img3.JPG']
     imgs_ei = ['img1-eI.jpg', 'img2-eI.jpg', 'img3-eI.jpg']
 
@@ -97,7 +97,7 @@ if __name__ == '__main__':
 
         else:
             print('\n\nIniciando o processso para:', imgs[i])
-            img = cv2.imread(path.join('src', 'images', imgs[i]))
+            img = cv2.imread(path.join('images', imgs[i]))
 
             # Criando os histogramas para a imagem original
             fig1, axs1 = plt.subplots(2, 2)
@@ -107,7 +107,7 @@ if __name__ == '__main__':
             __createHistogram(img[:, :, 0], axs1[0][1], 'Canal: B')
             __createHistogram(img[:, :, 1], axs1[1][0], 'Canal: G')
             __createHistogram(img[:, :, 2], axs1[1][1], 'Canal: R')
-            fig1.savefig(path.join('src', 'output', f'{imgs[i].split(".")[0]}-original-BGR.jpg'))
+            fig1.savefig(path.join('output', f'{imgs[i].split(".")[0]}-original-BGR.jpg'))
 
             # Equalizando a imagem
             print('Equalizando os canais B-G-R da figura:', imgs[i])
@@ -131,11 +131,11 @@ if __name__ == '__main__':
             __createHistogram(img[:, :, 0], axs1[0][1], 'Canal: B')
             __createHistogram(img[:, :, 1], axs1[1][0], 'Canal: G')
             __createHistogram(img[:, :, 2], axs1[1][1], 'Canal: R')
-            fig1.savefig(path.join('src', 'output', f'{imgs[i].split(".")[0]}-BGR_Equalizado-BGR.jpg'))
+            fig1.savefig(path.join('output', f'{imgs[i].split(".")[0]}-BGR_Equalizado-BGR.jpg'))
 
             # Caso as imagens equalizadas no canal I já tenham sido geradas, cria o histograma das mesmas
-            if path.isfile(path.join('src', 'output', imgs_ei[i])):
-                img = cv2.imread(path.join('src', 'output', imgs_ei[i]))
+            if path.isfile(path.join('output', imgs_ei[i])):
+                img = cv2.imread(path.join('output', imgs_ei[i]))
                 
                 # Criando o plot
                 print('Criando histograma das imagens equalizadas no canal I')
@@ -146,7 +146,7 @@ if __name__ == '__main__':
                 __createHistogram(img[:, :, 0], axs1[0][1], 'Canal: B')
                 __createHistogram(img[:, :, 1], axs1[1][0], 'Canal: G')
                 __createHistogram(img[:, :, 2], axs1[1][1], 'Canal: R')
-                fig1.savefig(path.join('src', 'output', f'{imgs_ei[i].split(".")[0]}-I_Equalizado-BGR.jpg'))
+                fig1.savefig(path.join('output', f'{imgs_ei[i].split(".")[0]}-I_Equalizado-BGR.jpg'))
 
                 # Calculando variância
                 print(f"\nVariância em B: {__deviation(img[:, :, 0])}")
