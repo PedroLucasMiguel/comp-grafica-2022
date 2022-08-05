@@ -37,16 +37,16 @@ def __equalizeHistogram(img):
         for j in range(img.shape[1]):
             img[i][j] = hist[img[i][j]][1]
 
-    # Cria histograma
-    #__createHistogram(img, img_name)
 
+# Realiza a conversão BGR para HSI
 def __bgr2hsi(img):
     
+    # Cria a nova imagem
     hsi_img = np.zeros(shape=img.shape, dtype=float)
 
     for i in range(img.shape[0]):
         for j in range(img.shape[1]):
-            # Valores BGR precisam ser normalizados
+            # Valores BGR são normalizados
             B = img[i][j][0]/255.0 
             G = img[i][j][1]/255.0
             R = img[i][j][2]/255.0
@@ -76,6 +76,7 @@ def __bgr2hsi(img):
 
             I = sum/3.0
 
+            # Aplica os valores de H,S,I em cada um dos canais da nova imagem criada
             hsi_img[i][j][0] = H
             hsi_img[i][j][1] = S
             hsi_img[i][j][2] = I
@@ -89,6 +90,7 @@ def __hsi2bgr(img):
 
     for i in range(img.shape[0]):
         for j in range(img.shape[1]):
+            # Lê os valores HSI da imagem de entrada
             H = img[i][j][0]
             S = img[i][j][1]
             I = img[i][j][2]
@@ -99,6 +101,7 @@ def __hsi2bgr(img):
             
             H = degrees(H)
 
+            # Começa o processo de conversão
             if 0 <= H <= 120 :
                 B = I * (1 - S)
                 R = I * (1 + (S * cos(radians(H)) / cos(radians(60) - radians(H))))

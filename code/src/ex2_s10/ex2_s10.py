@@ -1,3 +1,4 @@
+from genericpath import isfile
 import cv2
 import numpy as np
 from os import path
@@ -56,43 +57,69 @@ if __name__ == '__main__':
     imgs = ['img1.bmp', 'img2.bmp', 'img3.JPG']
     imgs_ei = ['img1-eI.jpg', 'img2-eI.jpg', 'img3-eI.jpg']
 
-    for img_name in imgs:
-        fig1, axs1 = plt.subplots(2, 2)
-        fig1.set_size_inches(14, 10)
-        print('Iniciando o processso para:', img_name)
-        img = cv2.imread(path.join('src', 'images', img_name))
-        axs1[0][0].imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-        axs1[0][0].set_title('Imagem Original')
-        __createHistogram(img[:, :, 0], axs1[0][1], 'Canal: B')
-        __createHistogram(img[:, :, 1], axs1[1][0], 'Canal: G')
-        __createHistogram(img[:, :, 2], axs1[1][1], 'Canal: R')
-        fig1.savefig(path.join('src', 'output', f'{img_name.split(".")[0]}-original-BGR.jpg'))
+    stop = False
+    i = 0
 
-        fig1, axs1 = plt.subplots(2, 2)
-        fig1.set_size_inches(14, 10)
-        print('Equalizando canal B')
-        __equalizeHistogram(img[:, :, 0])
-        print('Equalizando canal G')
-        __equalizeHistogram(img[:, :, 1])
-        print('Equalizando canal R')
-        __equalizeHistogram(img[:, :, 2])
-        axs1[0][0].imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-        axs1[0][0].set_title('Imagem Após Equalização')
-        __createHistogram(img[:, :, 0], axs1[0][1], 'Canal: B')
-        __createHistogram(img[:, :, 1], axs1[1][0], 'Canal: G')
-        __createHistogram(img[:, :, 2], axs1[1][1], 'Canal: R')
-        fig1.savefig(path.join('src', 'output', f'{img_name.split(".")[0]}-BGR_Equalizado-BGR.jpg'))
+    while not stop:
+        print('Escolha a imagem:')
+        print('[0] - img1.bmp')
+        print('[1] - img2.bmp')
+        print('[2] - img3.JPG\n')
+        print('[3] - Sair')
+        i = int(input('Resposta: '))
 
-    print('Criando histograma das imagens equalizadas no canal I')
-    for img_name in imgs_ei:
-        fig1, axs1 = plt.subplots(2, 2)
-        fig1.set_size_inches(14, 10)
-        img = cv2.imread(path.join('src', 'output', img_name))
-        axs1[0][0].imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-        axs1[0][0].set_title('Imagem HSI (I equalizado)')
-        __createHistogram(img[:, :, 0], axs1[0][1], 'Canal: B')
-        __createHistogram(img[:, :, 1], axs1[1][0], 'Canal: G')
-        __createHistogram(img[:, :, 2], axs1[1][1], 'Canal: R')
-        fig1.savefig(path.join('src', 'output', f'{img_name.split(".")[0]}-I_Equalizado-BGR.jpg'))
+        if i < 0 or i > 3:
+            print('Valor inválido!')
+        
+        elif i == 3:
+            stop = True
 
-    print('Todos os resultados foram salvos em: output/')
+        else:
+            # Criando os histogramas para a imagem original
+            fig1, axs1 = plt.subplots(2, 2)
+            fig1.set_size_inches(14, 10)
+            print('Iniciando o processso para:', imgs[i])
+            img = cv2.imread(path.join('src', 'images', imgs[i]))
+            axs1[0][0].imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+            axs1[0][0].set_title('Imagem Original')
+            __createHistogram(img[:, :, 0], axs1[0][1], 'Canal: B')
+            __createHistogram(img[:, :, 1], axs1[1][0], 'Canal: G')
+            __createHistogram(img[:, :, 2], axs1[1][1], 'Canal: R')
+            fig1.savefig(path.join('src', 'output', f'{imgs[i].split(".")[0]}-original-BGR.jpg'))
+
+            print('Equalizando os canais B-G-R da figura:', imgs[i])
+            fig1, axs1 = plt.subplots(2, 2)
+            fig1.set_size_inches(14, 10)
+            print('Equalizando canal B')
+            __equalizeHistogram(img[:, :, 0])
+            print('Equalizando canal G')
+            __equalizeHistogram(img[:, :, 1])
+            print('Equalizando canal R')
+            __equalizeHistogram(img[:, :, 2])
+            axs1[0][0].imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+            axs1[0][0].set_title('Imagem Após Equalização dos Três Canais')
+            __createHistogram(img[:, :, 0], axs1[0][1], 'Canal: B')
+            __createHistogram(img[:, :, 1], axs1[1][0], 'Canal: G')
+            __createHistogram(img[:, :, 2], axs1[1][1], 'Canal: R')
+            fig1.savefig(path.join('src', 'output', f'{imgs[i].split(".")[0]}-BGR_Equalizado-BGR.jpg'))
+
+
+            if path.isfile(path.join('src', 'output', imgs_ei[i])):
+                print('Criando histograma das imagens equalizadas no canal I')
+                fig1, axs1 = plt.subplots(2, 2)
+                fig1.set_size_inches(14, 10)
+                img = cv2.imread(path.join('src', 'output', imgs_ei[i]))
+                axs1[0][0].imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+                axs1[0][0].set_title('Imagem HSI (I equalizado)')
+                __createHistogram(img[:, :, 0], axs1[0][1], 'Canal: B')
+                __createHistogram(img[:, :, 1], axs1[1][0], 'Canal: G')
+                __createHistogram(img[:, :, 2], axs1[1][1], 'Canal: R')
+                fig1.savefig(path.join('src', 'output', f'{imgs_ei[i].split(".")[0]}-I_Equalizado-BGR.jpg'))
+
+                print('Todos os resultados foram salvos em: output/')
+                input('Pressine ENTER para continuar')
+            
+            else:
+                print('\nERRO! ARQUIVO DE EQUALIZAÇÃO NO CANAL I NÃO ESTA PRESENTE NA PASTA output/!')
+                print('Execute o Exercício 10 e tente novamente')
+                stop = True
