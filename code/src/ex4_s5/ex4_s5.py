@@ -2,13 +2,16 @@ import cv2
 import numpy as np
 from os import path
 from matplotlib import pyplot as plt
-
-DEPTH = 8
+from math import floor, log2
 
 # Função responsável por criar as imagens dos histogramas
 def __createHistogram(img, img_name):
+
+    # Calculando profundidade da imagem
+    depth = floor(log2(np.amax(img))) + 1
+
     # Após receber a imagem (img) como parâmetro, constrói a imagem do histograma
-    scale_max = pow(2, DEPTH)
+    scale_max = pow(2, depth)
 
     plt.hist(img.ravel(), scale_max, [0, scale_max])
     plt.xlabel("Níveis de cinza")
@@ -24,12 +27,12 @@ def __createHistogram(img, img_name):
 
 def __equalizeHistogram(img, img_name):
 
-    rows = pow(2, DEPTH)
+    rows = np.amax(img)
     qtd_pixels = img.shape[0] * img.shape[1]
     
     hist = []
 
-    for i in range(rows):
+    for i in range(rows+1):
         hist.insert(i, [i, 0])
 
     # Criando a tabela base do histograma
@@ -38,16 +41,18 @@ def __equalizeHistogram(img, img_name):
             hist[j][1] = hist[j][1] + 1
 
     # Calculando probabilidade
-    for i in range(rows):
+    for i in range(rows+1):
         hist[i][1] = hist[i][1]/qtd_pixels
 
+    #print(hist)
+
     # Calculando FDA
-    for i in range(0, rows-1, 1):
-        hist[i+1][1] = hist[i][1] + hist[i+1][1]
+    for i in range(1, rows+1):
+        hist[i][1] = hist[i-1][1] + hist[i][1]
 
     # Calculando os niveis de cinza equalizados
-    for i in range(rows):
-        hist[i][1] = round(hist[i][1] * rows-1)
+    for i in range(rows+1):
+        hist[i][1] = round(hist[i][1] * rows)
 
     # Corrigindo imagem
     for i in range(img.shape[0]):
