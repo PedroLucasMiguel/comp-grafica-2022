@@ -94,3 +94,5 @@ if __name__ == '__main__':
         __createHistogram(img[:, :, 1], axs1[1][0], 'Canal: G')
         __createHistogram(img[:, :, 2], axs1[1][1], 'Canal: R')
         fig1.savefig(path.join('src', 'output', f'{img_name.split(".")[0]}-I_Equalizado-BGR.jpg'))
+
+    print('Todos os resultados foram salvos em: output/')
